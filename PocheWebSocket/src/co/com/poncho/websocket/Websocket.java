@@ -25,6 +25,7 @@ public class Websocket {
 	
 	@OnOpen
 	public void open(Session session) {
+		System.out.println("open session ");
 		sessionHandler.addSession(session);
 	}
 
@@ -41,6 +42,7 @@ public class Websocket {
 
 	@OnMessage
 	public void handleMessage(String message, Session session) {
+		System.out.println("call message");
 		try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();
 
