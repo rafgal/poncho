@@ -4,6 +4,7 @@ public class User {
 
 	String name;
 	int id;
+	private boolean status;
 	
 	public String getName() {
 		return name;
@@ -23,6 +24,14 @@ public class User {
 	
 	public User() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 	
