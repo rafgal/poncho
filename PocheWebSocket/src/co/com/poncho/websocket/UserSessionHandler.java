@@ -13,102 +13,68 @@ import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.websocket.Session;
 
-import co.com.poncho.model.User;
+import co.com.poncho.model.Usuario;
 
 @ApplicationScoped
 public class UserSessionHandler {
-	
+
 	private int userId = 0;
 	private final Set<Session> sessions = new HashSet<>();
-    private final Set<User> users = new HashSet<>();
-    
-    public void addSession(Session session) {
-        sessions.add(session);
-        for (User user : users) {
-            JsonObject addMessage = createAddMessage(user);
-            sendToSession(session, addMessage);
-        }
-    }
+	private final Set<Usuario> users = new HashSet<>();
 
-    public void removeSession(Session session) {
-        sessions.remove(session);
-    }
-    
-    public List getUsers() {
-        return new ArrayList<>(users);
-    }
+	public void addSession(Session session) {
+		System.out.println("todo bien en add session");
+		sessions.add(session);
+		for (Usuario user : users) {
+			JsonObject addMessage = createAddMessage(user);
+			sendToSession(session, addMessage);
+		}
+	}
 
-    public void addUser(User user) {
-    	user.setId(userId);
-    	users.add(user);
-    	userId++;
-        JsonObject addMessage = createAddMessage(user);
-        sendToAllConnectedSessions(addMessage);
-    }
+	public void removeSession(Session session) {
+		sessions.remove(session);
+	}
 
-    public void removeUser(int id) {
-    	User user = getUserById(id);
-        if (user != null) {
-            users.remove(user);
-            JsonProvider provider = JsonProvider.provider();
-            JsonObject removeMessage = provider.createObjectBuilder()
-                    .add("action", "remove")
-                    .add("id", id)
-                    .build();
-            sendToAllConnectedSessions(removeMessage);
-        }
-    }
+	public List getUsers() {
+		return new ArrayList<>(users);
+	}
 
-    public void toggleUser(int id) {
-    	JsonProvider provider = JsonProvider.provider();
-        User user = getUserById(id);
-        if (user != null) {
-            if (user.isStatus()) {
-                user.setStatus(false);
-            } else {
-                user.setStatus(true);
-            }
-            JsonObject updateDevMessage = provider.createObjectBuilder()
-                    .add("action", "toggle")
-                    .add("id", user.getId())
-                    .add("status", user.isStatus())
-                    .build();
-            sendToAllConnectedSessions(updateDevMessage);
-        }
-    }
+	public void addUser(Usuario user) {
+		users.add(user);
+		JsonObject addMessage = createAddMessage(user);
+		sendToAllConnectedSessions(addMessage);
+	}
 
-    private User getUserById(int id) {
-    	for (User user : users) {
-            if (user.getId() == id) {
-                return user;
-            }
-        }
-        return null;
-    }
+//	public void removeUser(int id) {
+//		Usuario user = getUserById(id);
+//		if (user != null) {
+//			users.remove(user);
+//			JsonProvider provider = JsonProvider.provider();
+//			JsonObject removeMessage = provider.createObjectBuilder().add("action", "remove").add("id", id).build();
+//			sendToAllConnectedSessions(removeMessage);
+//		}
+//	}
 
-    private JsonObject createAddMessage(User user) {
-    	JsonProvider provider = JsonProvider.provider();
-        JsonObject addMessage = provider.createObjectBuilder()
-                .add("action", "add")
-                .add("id", user.getId())
-                .add("name", user.getName())
-                .add("status", user.isStatus())
-                .build();
-        return addMessage;
-    }
+	private JsonObject createAddMessage(Usuario user) {
+		JsonProvider provider = JsonProvider.provider();
+		JsonObject addMessage = provider.createObjectBuilder().add("action", "add")
 
-    private void sendToAllConnectedSessions(JsonObject message) {
-    	for (Session session : sessions) {
-            sendToSession(session, message);
-        }
-    }
+				.build();
+		return addMessage;
+	}
 
-    private void sendToSession(Session session, JsonObject message) {
-    	try {
-            session.getBasicRemote().sendText(message.toString());
-        } catch (IOException ex) {
-            sessions.remove(session);
-            Logger.getLogger(UserSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+	private void sendToAllConnectedSessions(JsonObject message) {
+		for (Session session : sessions) {
+			sendToSession(session, message);
+		}
+	}
+
+	private void sendToSession(Session session, JsonObject message) {
+		try {
+			session.getBasicRemote().sendText(message.toString());
+		} catch (IOException ex) {
+			sessions.remove(session);
+			Logger.getLogger(UserSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 }
