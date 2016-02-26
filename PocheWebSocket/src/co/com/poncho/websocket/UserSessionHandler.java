@@ -30,10 +30,10 @@ public class UserSessionHandler {
    {
       System.out.println( "todo bien en add session" );
       sessions.add( session );
-      for ( Usuario user : users ) {
-         JsonObject addMessage = createAddMessage( user );
-         sendToSession( session, addMessage );
-      }
+//      for ( Usuario user : users ) {
+//         JsonObject addMessage = createAddMessage( );
+//         sendToSession( session, addMessage );
+//      }
    }
 
    public void removeSession( Session session )
