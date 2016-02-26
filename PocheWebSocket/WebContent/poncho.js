@@ -1,9 +1,9 @@
 //This file register into WebSocket for votation
 
-var ip_server = "10.10.1.4";
-var port = 8080;
+var ip_server = "localhost";//"10.10.1.90";
+var port = 9091;
 var poncho = angular.module('poncho',[]);
-var ws = new WebSocket('ws://'+ip_server+':'+port+'/PocheWebSocket/ponchito');
+var ws = new WebSocket('ws://'+ip_server+':'+port+'/PonchoWebSocket/ponchito');
 
 ws.onmessage = function(data) {
 	console.log(data);
