@@ -19,8 +19,6 @@ import co.com.poncho.model.Usuario;
 @ServerEndpoint("/ponchito")
 public class Websocket {
 
-	private final Logger logger = Logger.getLogger(this.getClass().getName());
-
 	@OnClose
 	public void onConnectionClose(Session session) {
 		System.out.println("cerrada conexion");
@@ -49,9 +47,19 @@ public class Websocket {
 				System.out.println("Registrar usuario");
 				String nombre = jsonMessage.getString("nombre");
 				Usuario user = new Usuario(nombre);
-				sessionHandler.addUser(user);
+				sessionHandler.addUser(user,session);
 				break;
 
+			case 1:
+			   System.out.println( "Registrar voto" );
+			   int voto = jsonMessage.getInt( "voto" );
+			   int tipoVoto = jsonMessage.getInt( "tipoVoto" );
+			   sessionHandler.registerVote( voto, tipoVoto, session );
+			   break;
+			case 2:
+			   System.out.println( "Aprobar votación" );
+			   sessionHandler.aprobarVotacion( session );
+			   break;
 			default:
 				break;
 			}
