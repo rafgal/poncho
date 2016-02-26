@@ -30,10 +30,6 @@ public class UserSessionHandler {
    {
       System.out.println( "todo bien en add session" );
       sessions.add( session );
-//      for ( Usuario user : users ) {
-//         JsonObject addMessage = createAddMessage( );
-//         sendToSession( session, addMessage );
-//      }
    }
 
    public void removeSession( Session session )
@@ -41,7 +37,7 @@ public class UserSessionHandler {
       sessions.remove( session );
    }
 
-   public List getUsers()
+   public List<Usuario> getUsers()
    {
       return new ArrayList<>( users );
    }
@@ -122,17 +118,13 @@ public class UserSessionHandler {
       return voteMessage;
    }
 
-   // public void removeUser(int id) {
-   // Usuario user = getUserById(id);
-   // if (user != null) {
-   // users.remove(user);
-   // JsonProvider provider = JsonProvider.provider();
-   // JsonObject removeMessage = provider.createObjectBuilder().add("action", "remove").add("id",
-   // id).build();
-   // sendToAllConnectedSessions(removeMessage);
-   // }
-   // }
-
+   public void removeUser( Session session ) {
+      if ( sesionesUsuarios.containsKey( session.getId() ) ) {
+         sesionesUsuarios.remove( session.getId() );
+      }
+   }
+   
+   
    private JsonObject createAddMessage()
    {
       JsonProvider provider = JsonProvider.provider();
@@ -150,7 +142,7 @@ public class UserSessionHandler {
 
    private void sendToAllConnectedSessions( JsonObject message )
    {
-      System.out.println( "bcast " + message.toString() );
+      System.out.println( "bcast: " + message.toString() );
       for ( Session session : sessions ) {
          sendToSession( session, message );
       }
