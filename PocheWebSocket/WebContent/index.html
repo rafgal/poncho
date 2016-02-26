@@ -1,6 +1,8 @@
 <html ng-app="poncho">
 	<head>
 		<title>Poncho</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+		
 		<link rel="stylesheet" href="theme.css"></style>		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
@@ -13,10 +15,15 @@
 			<input placeholder="Nombre" ng-model="person"></input>
 			<button ng-click="register(person)">Entrar</button>
 		</div>
-		<div id="votation">
-			<input placeholder="Cantidad" ng-model="vote"></input>
-			<button ng-click="submit(vote)">Dias</button>
-			<button ng-click="submit(vote)">Horas</button>
+		<div id="votation" ng-controller="voteController">
+			<div ng-model="vote">
+				<input placeholder="Cantidad" ng-model="vote.quantity"></input>
+				<select ng-model="vote.type">
+					<option value="1">Horas</option>
+					<option value="2">Días</option>
+				</select>
+			</div>
+			<button ng-click="submit(vote)">Votar</button>
 		</div>
 	</body>
 </html>

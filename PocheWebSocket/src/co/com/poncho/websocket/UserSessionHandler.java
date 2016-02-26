@@ -34,7 +34,7 @@ public class UserSessionHandler {
         sessions.remove(session);
     }
     
-    public List getUsers() {
+    public List<User> getUsers() {
         return new ArrayList<>(users);
     }
 
