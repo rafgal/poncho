@@ -23,7 +23,7 @@ public class Websocket {
 
 	@OnClose
 	public void onConnectionClose(Session session) {
-		logger.info("Connection close .... " + session.getId());
+		System.out.println("cerrada conexion");
 	}
 
 	@Inject
@@ -43,9 +43,10 @@ public class Websocket {
 			JsonObject jsonMessage = reader.readObject();
 
 			int comando = jsonMessage.getInt("comando");
-			
+			System.out.println(comando);
 			switch (comando) {
 			case 0:
+				System.out.println("Registrar usuario");
 				String nombre = jsonMessage.getString("nombre");
 				Usuario user = new Usuario(nombre);
 				sessionHandler.addUser(user);

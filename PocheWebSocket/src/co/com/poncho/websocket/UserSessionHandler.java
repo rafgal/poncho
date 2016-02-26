@@ -40,6 +40,7 @@ public class UserSessionHandler {
 	}
 
 	public void addUser(Usuario user) {
+		System.out.println("adduser");
 		users.add(user);
 		JsonObject addMessage = createAddMessage(user);
 		sendToAllConnectedSessions(addMessage);
@@ -64,6 +65,7 @@ public class UserSessionHandler {
 	}
 
 	private void sendToAllConnectedSessions(JsonObject message) {
+		System.out.println("bcast");
 		for (Session session : sessions) {
 			sendToSession(session, message);
 		}

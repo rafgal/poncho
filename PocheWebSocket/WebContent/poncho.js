@@ -14,7 +14,7 @@ ws.onmessage = function(data) {
 poncho.controller("loginController", function($scope, $http) {
 	$scope.register = function(person) {
 		if(person != "") {
-			ws.send('{"comando":1,"nombre":"'+person+'"}');
+			ws.send('{"comando":0,"nombre":"'+person+'"}');
 		}
     };
 });
