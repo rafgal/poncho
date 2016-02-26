@@ -24,7 +24,8 @@ public class Websocket {
    public String onMessage( String message )
    {
       logger.info( "Connection message ... " + message );
-      return message;
+      String jsonResponse = "{\"c\":0,\"usuarios\":[\"Javi\",\"Jonas\"]}";
+      return jsonResponse;
    }
 
    @OnClose

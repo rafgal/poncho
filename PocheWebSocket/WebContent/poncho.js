@@ -8,9 +8,9 @@ var ws = new WebSocket('ws://' + ip_server + ':' + port
 var user = undefined;
 
 ws.onmessage = function(response) {
-	console.log(response);
-	var message = JSON.parse(JSON.stringify(response.data));
-	console.log(JSON.stringify(message));
+	var str = response.data;
+	var json = JSON.parse(str);
+	console.log(json.usuarios);
 	/*
 	 * switch (key) { case value:
 	 * 
@@ -25,9 +25,7 @@ ws.onmessage = function(response) {
 poncho.controller("loginController", function($scope) {
 	$scope.register = function(person) {
 		if (person != "") {
-			console.log(person);
-			var jsonRegister = {"c":0,"items":[{"nombre":person}]};
-			console.log(JSON.stringify(jsonRegister))
+			var jsonRegister = {"c":0,"nombre":person};
 			ws.send(jsonRegister);
 		}
 	};
