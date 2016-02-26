@@ -40,4 +40,5 @@ poncho.controller("voteController", function($scope) {
 		}
 		// console.log(vote.quantity + " --- " + vote.type);
 	};
+	
 });
