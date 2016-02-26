@@ -8,6 +8,7 @@ var ws = new WebSocket('ws://' + ip_server + ':' + port
 var user = undefined;
 
 ws.onmessage = function(response) {
+	console.log("Respuesta del WebSocket " + response);
 	var str = response.data;
 	var json = JSON.parse(str);
 	console.log(json.usuarios);
