@@ -1,7 +1,6 @@
 package co.com.poncho.websocket;
 
 import java.io.StringReader;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -36,7 +35,7 @@ public class Websocket {
 	
 	@OnMessage
 	public void  onMessage(String message, Session session) {
-		System.out.println("call message");
+		System.out.println("call message " + message);
 		try (JsonReader reader = Json.createReader(new StringReader(message))) {
 			JsonObject jsonMessage = reader.readObject();
 
@@ -63,7 +62,6 @@ public class Websocket {
 			default:
 				break;
 			}
-			
 		}
 	}
 

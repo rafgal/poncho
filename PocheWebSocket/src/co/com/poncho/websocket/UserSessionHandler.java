@@ -150,7 +150,7 @@ public class UserSessionHandler {
 
    private void sendToAllConnectedSessions( JsonObject message )
    {
-      System.out.println( "bcast" );
+      System.out.println( "bcast " + message.toString() );
       for ( Session session : sessions ) {
          sendToSession( session, message );
       }

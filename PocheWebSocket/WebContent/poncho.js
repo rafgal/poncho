@@ -25,7 +25,7 @@ ws.onmessage = function(response) {
 poncho.controller("loginController", function($scope) {
 	$scope.register = function(person) {
 		if (person != "") {
-			var jsonRegister = {"c":0,"nombre":person};
+			var jsonRegister = '{"comando":0,"nombre":"'+person+'"}';
 			ws.send(jsonRegister);
 		}
 	};
