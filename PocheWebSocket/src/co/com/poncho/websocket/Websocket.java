@@ -1,78 +1,72 @@
 package co.com.poncho.websocket;
 
-import java.util.logging.Logger;
+import java.io.StringReader;
 
+import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-//@ApplicationScoped
-@ServerEndpoint("/ponchito")
+import co.com.poncho.model.Usuario;
+
+@ServerEndpoint( "/ponchito" )
 public class Websocket {
-	
-	private final Logger logger = Logger.getLogger(this.getClass().getName());
-	 
-    @OnOpen
-    public void onConnectionOpen(Session session) {
-        logger.info("Connection opened ... " + session.getId());
-    }
- 
-    @OnMessage
-    public String onMessage(String message) {
-    	System.out.println("me lo pela " + message);
-        return message;
-    }
- 
-    @OnClose
-    public void onConnectionClose(Session session) {
-        logger.info("Connection close .... " + session.getId());
-    }
-	
-	/*
 
-	@Inject
-    private UserSessionHandler sessionHandler;
-	
-	@OnOpen
-	public void open(Session session) {
-		System.out.println("open session ");
-		sessionHandler.addSession(session);
-	}
+   @OnClose
+   public void onConnectionClose( Session session )
+   {
+      System.out.println( "cerrada conexion" );
+      sessionHandler.removeSession( session );
+      sessionHandler.removeUser( session );
+   }
 
-	@OnClose
-	public void close(Session session) {
-		sessionHandler.removeSession(session);
-	}
+   @Inject
+   private UserSessionHandler sessionHandler;
 
-	@OnError
-	public void onError(Throwable error) {
-		System.out.println("Error en ponchitooooooooooo");
-		error.printStackTrace();
-	}
+   @OnOpen
+   public void open( Session session )
+   {
+      System.out.println( "open session " );
+      sessionHandler.addSession( session );
+   }
 
-	@OnMessage
-	public void handleMessage(String message, Session session) {
-		System.out.println("call message");
-		try (JsonReader reader = Json.createReader(new StringReader(message))) {
-            JsonObject jsonMessage = reader.readObject();
+   @OnMessage
+   public void onMessage( String message, Session session )
+   {
+      System.out.println( "call message: " + message );
+      try ( JsonReader reader = Json.createReader( new StringReader( message ) ) ) {
+         JsonObject jsonMessage = reader.readObject();
 
-            if ("add".equals(jsonMessage.getString("action"))) {
-            	User user = new User();
-            	user.setName(jsonMessage.getString("name"));
-                sessionHandler.addUser(user);
-            }
+         int comando = jsonMessage.getInt( "comando" );
+         System.out.println( comando );
+         switch ( comando ) {
+         case 0:
+            System.out.println( "Registrar usuario" );
+            String nombre = jsonMessage.getString( "nombre" );
+            Usuario user = new Usuario( nombre );
+            sessionHandler.addUser( user, session );
+            break;
 
-            if ("remove".equals(jsonMessage.getString("action"))) {
-                int id = (int) jsonMessage.getInt("id");
-                sessionHandler.removeUser(id);
-            }
+         case 1:
+            System.out.println( "Registrar voto" );
+            int voto = jsonMessage.getInt( "voto" );
+            int tipoVoto = jsonMessage.getInt( "tipoVoto" );
+            sessionHandler.registerVote( voto, tipoVoto, session );
+            break;
+         case 2:
+            System.out.println( "Aprobar votación" );
+            sessionHandler.aprobarVotacion( session );
+            break;
+         default:
+            break;
+         }
 
-            if ("toggle".equals(jsonMessage.getString("action"))) {
-                int id = (int) jsonMessage.getInt("id");
-                sessionHandler.toggleUser(id);
-            }
-        }
-	}*/
+      }
+   }
+
 }
