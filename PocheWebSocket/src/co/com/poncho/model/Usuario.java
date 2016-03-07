@@ -1,5 +1,7 @@
 package co.com.poncho.model;
 
+import com.google.gson.Gson;
+
 public class Usuario {
 
 	String nombre;
@@ -44,4 +46,7 @@ public class Usuario {
 		this.aceptado = aceptado;
 	}
 
+	public String getEstado(){
+		return new Gson().toJson(this);
+	}
 }

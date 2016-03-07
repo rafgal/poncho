@@ -22,6 +22,7 @@ public class Websocket {
 	@OnClose
 	public void onConnectionClose(Session session) {
 		System.out.println("cerrada conexion");
+		sessionHandler.removeSession(session);
 	}
 
 	@Inject

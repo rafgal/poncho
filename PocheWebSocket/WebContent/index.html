@@ -8,12 +8,15 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
 		<script type="text/javascript" src="poncho.js"></script>
 	</head>
-	<body>
+	<body ng-controller="boardCntrl as board">
 		<div id="register" ng-controller="loginController"> 
 			<input placeholder="Nombre" ng-model="person"></input>
 			<button ng-click="register(person)">Entrar</button>
 		</div>
-		<div id="votation">
+		<div id="board" ng-repeat="voter in board">
+			<h3>{{voter.nombre}}</h3>
+		</div>
+		<div id="votation" >
 			<input placeholder="Cantidad" ng-model="vote"></input>
 			<button ng-click="submit(vote)">Dias</button>
 			<button ng-click="submit(vote)">Horas</button>
