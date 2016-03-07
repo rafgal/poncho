@@ -1,26 +1,39 @@
 <html ng-app="poncho">
-	<head>
-		<title>Poncho</title>
-		<link rel="stylesheet" href="theme.css"></style>		
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
-		<script type="text/javascript" src="poncho.js"></script>
-	</head>
-	<body ng-controller="BoardController as boardCtrl">
-		<div id="register" ng-controller="loginController"> 
-			<input placeholder="Nombre" ng-model="person"></input>
-			<button ng-click="register(person)">Entrar</button>
+<head>
+<title>Poncho</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="theme.css">
+</style>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+	integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+	crossorigin="anonymous" />
+<script type="text/javascript" src="poncho.js"></script>
+</head>
+<body ng-controller="BoardController as boardCtrl">
+	<div id="register" ng-controller="loginController">
+		<input placeholder="Nombre" ng-model="person"></input>
+		<button ng-click="register(person)">Entrar</button>
+	</div>
+	<div id="board" ng-repeat="voter in boardCtrl.board">
+		<h3>{{voter.nombre}}</h3>
+		<p>{{voter.voto | ordinal: voter.tipoVoto}}</p>
+	</div>
+	<div id="votation">
+		<input placeholder="Cantidad" ng-model="vote"></input>
+		<div class="btn-group" role="group" aria-label="...">
+			<button type="button" class="btn btn-default" >horas</button>
+			<button type="button" class="btn btn-default">días</button>
 		</div>
-		<div id="board" ng-repeat="voter in boardCtrl.board">
-			<h3>{{voter.nombre}}</h3>
-			<p>{{voter.voto | ordinal: voter.tipoVoto}}</p>
-		</div>
-		<div id="votation" >
-			<input placeholder="Cantidad" ng-model="vote"></input>
-			<button ng-click="submit(vote)">Días</button>
-			<button ng-click="submit(vote)">Horas</button>
-		</div>
-	</body>
+	</div>
+</body>
 </html>
