@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 public class Usuario {
 
 	String nombre;
-	int voto;
+	int voto=-1;
 	int tipoVoto;
 	boolean aceptado;
 

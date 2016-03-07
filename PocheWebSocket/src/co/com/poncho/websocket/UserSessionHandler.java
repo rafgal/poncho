@@ -129,6 +129,7 @@ public class UserSessionHandler {
 		}
 		jsonObject.addProperty("comando", 0);
 		jsonObject.add("usuarios", jsonArray);
+		System.out.println("dfdsfdsf "+jsonObject);
 		return jsonObject;
 	}
 
