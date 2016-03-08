@@ -1,45 +1,91 @@
 //This file register into WebSocket for votation
 
-var ip_server = "localhost";// "10.10.1.90";
-var port = 9091;
-var poncho = angular.module('poncho', []);
+var ip_server = window.location.hostname;
+var port = 9171;
 var ws = new WebSocket('ws://' + ip_server + ':' + port
 		+ '/PonchoWebSocket/ponchito');
-var user = undefined;
-
-ws.onmessage = function(response) {
-	console.log("Respuesta del WebSocket " + response);
-	var str = response.data;
-	var json = JSON.parse(str);
-	console.log(json.usuarios);
-	/*
-	 * switch (key) { case value:
-	 * 
-	 * break;
-	 * 
-	 * default: break; }
-	 */
-	$("#register").hide();
-	$("#votation").show();
-}
-
-poncho.controller("loginController", function($scope) {
-	$scope.register = function(person) {
-		if (person != undefined && person != "") {
-			var jsonRegister = '{"comando":0,"nombre":"'+person+'"}';
-			ws.send(jsonRegister);
+(function() {
+	var poncho = angular.module('poncho', [ 'ui.bootstrap' ]);
+	poncho.directive('radioWithChangeHandler',
+			[ function checkboxWithChangeHandler() {
+				return {
+					replace : false,
+					require : 'ngModel',
+					scope : false,
+					link : function(scope, element, attr, ngModelCtrl) {
+						$(element).change(function() {
+							if (element[0].checked) {
+								scope.$apply(function() {
+									ngModelCtrl.$setViewValue(attr.value);
+								});
+							}
+						});
+					}
+				};
+			} ]);
+	poncho.filter('ordinal', function() {
+		return function(value, type, boardStatus) {
+			if (boardStatus == 0) {
+				if (value < 0) {
+					return "Sin voto";
+				} else {
+					return "votó"
+				}
+			} else {
+				if (value < 0) {
+					return "Sin voto";
+				}
+				var typeString = '';
+				switch (type) {
+				case 0:
+					typeString = ' horas';
+					break;
+				case 1:
+					typeString = ' días';
+					break;
+				}
+				return value + typeString;
+			}
 		}
-	};
-});
+	});
 
-poncho.controller("voteController", function($scope) {
-	$scope.submit = function() {
-		var vote = $scope.vote;
-		if (vote != undefined) {
-			var json = JSON.stringify(vote);
-			console.log(json);
+	poncho.controller("loginController", function($scope, $http) {
+
+		ws.onmessage = function(data) {
+			$("#register").hide();
+			$("#votation").show();
+			var datas = angular.fromJson(data.data);
+			$scope.updateBoard(JSON.parse(data.data));
 		}
-		// console.log(vote.quantity + " --- " + vote.type);
-	};
-	
-});
+		$scope.register = function(person) {
+			if (person != "") {
+				ws.send('{"comando":0,"nombre":"' + person + '"}');
+			}
+		};
+	});
+
+	poncho.controller("BoardController", function($scope, $http) {
+
+		var boardCtrl = this;
+		boardCtrl.fields = {
+			type : 0
+		};
+		boardCtrl.command = {
+			comando : 1
+		};
+		boardCtrl.board = [];
+		boardCtrl.status = 0;
+		$scope.updateBoard = function(data) {
+			boardCtrl.board = data.usuarios;
+			boardCtrl.status = data.boardStatus;
+			$scope.$apply();
+		};
+		$scope.vote = function() {
+			boardCtrl.command.vote = {};
+			boardCtrl.command.vote.value = boardCtrl.fields.vote;
+			boardCtrl.command.vote.type = boardCtrl.fields.type;
+			console.log(JSON.stringify(boardCtrl.command));
+			ws.send(JSON.stringify(boardCtrl.command));
+		}
+	});
+})();
