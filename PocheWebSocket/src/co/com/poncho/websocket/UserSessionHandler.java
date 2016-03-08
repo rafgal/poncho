@@ -26,6 +26,7 @@ public class UserSessionHandler {
 
 	private Set<Session> sessions = new HashSet<>();
 	private Set<Usuario> users = new HashSet<>();
+	private Set<Usuario> usersWithVote=new HashSet<>();
 	private Map<String, Usuario> sesionesUsuarios = new HashMap<String, Usuario>();
 
 	public void addSession(Session session) {
@@ -40,6 +41,7 @@ public class UserSessionHandler {
 		sessions.remove(session);
 		Usuario usuario = sesionesUsuarios.get(session.getId());
 		users.remove(usuario);
+		usersWithVote.remove(usuario);
 		sesionesUsuarios.remove(session.getId());
 		JsonObject addMessage = getBoardStatus();
 		sendToAllConnectedSessions(addMessage);
@@ -63,8 +65,8 @@ public class UserSessionHandler {
 		Usuario usuario = sesionesUsuarios.get(session.getId());
 		usuario.setVoto(voto);
 		usuario.setTipoVoto(tipoVoto);
-		JsonObject voteMessage = createVoteMessage();
-
+		usersWithVote.add(usuario);
+		JsonObject voteMessage = getBoardStatus();
 		sendToAllConnectedSessions(voteMessage);
 	}
 
@@ -127,9 +129,11 @@ public class UserSessionHandler {
 		for (Usuario usu : users) {
 			jsonArray.add(new JsonParser().parse(usu.getEstado()).getAsJsonObject());
 		}
-		jsonObject.addProperty("comando", 0);
+		int boardStatus=0;
+		if(usersWithVote.size()==users.size())
+			boardStatus=1;
+		jsonObject.addProperty("boardStatus", boardStatus);
 		jsonObject.add("usuarios", jsonArray);
-		System.out.println("dfdsfdsf "+jsonObject);
 		return jsonObject;
 	}
 

@@ -34,9 +34,8 @@ public class Websocket {
 		sessionHandler.addSession(session);
 	}
 
-	
 	@OnMessage
-	public void  onMessage(String message, Session session) {
+	public void onMessage(String message, Session session) {
 		System.out.println("call message");
 		try (JsonReader reader = Json.createReader(new StringReader(message))) {
 			JsonObject jsonMessage = reader.readObject();
@@ -48,23 +47,24 @@ public class Websocket {
 				System.out.println("Registrar usuario");
 				String nombre = jsonMessage.getString("nombre");
 				Usuario user = new Usuario(nombre);
-				sessionHandler.addUser(user,session);
+				sessionHandler.addUser(user, session);
 				break;
 
 			case 1:
-			   System.out.println( "Registrar voto" );
-			   int voto = jsonMessage.getInt( "voto" );
-			   int tipoVoto = jsonMessage.getInt( "tipoVoto" );
-			   sessionHandler.registerVote( voto, tipoVoto, session );
-			   break;
+				System.out.println("Registrar voto");
+				JsonObject vote = jsonMessage.getJsonObject("vote");
+				int voto = vote.getInt("value");
+				int tipoVoto = vote.getInt("type");
+				sessionHandler.registerVote(voto, tipoVoto, session);
+				break;
 			case 2:
-			   System.out.println( "Aprobar votación" );
-			   sessionHandler.aprobarVotacion( session );
-			   break;
+				System.out.println("Aprobar votación");
+				sessionHandler.aprobarVotacion(session);
+				break;
 			default:
 				break;
 			}
-			
+
 		}
 	}
 
