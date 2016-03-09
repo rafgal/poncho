@@ -89,37 +89,38 @@ public class UserSessionHandler {
 		return voteMessage;
 	}
 
-	public void aprobarVotacion(Session session) {
+	public void setConformity(Session session, boolean approved) {
 		int numAprobaciones = 0;
 		Usuario usuario = sesionesUsuarios.get(session.getId());
-		usuario.setAceptado(true);
+		usuario.setAceptado(approved);
 		for (Usuario user : users) {
 			if (user.isAceptado()) {
 				numAprobaciones++;
 			}
 		}
-		if (numAprobaciones > sesionesUsuarios.size()) {
-
+		if (numAprobaciones >= sesionesUsuarios.size()) {
+			
 			for (Usuario user : users) {
 				user.setAceptado(false);
+				user.setVoto(-1);
 			}
-
+			usersWithVote.clear();
 		}
 		JsonObject addMessage = getBoardStatus();
 		sendToAllConnectedSessions(addMessage);
 	}
 
-	// public void removeUser(int id) {
-	// Usuario user = getUserById(id);
-	// if (user != null) {
-	// users.remove(user);
-	// JsonProvider provider = JsonProvider.provider();
-	// JsonObject removeMessage = provider.createObjectBuilder().add("action",
-	// "remove").add("id",
-	// id).build();
-	// sendToAllConnectedSessions(removeMessage);
-	// }
-	// }
+//	 public void removeUser(int id) {
+//	 Usuario user = getUserById(id);
+//	 if (user != null) {
+//	 users.remove(user);
+//	 JsonProvider provider = JsonProvider.provider();
+//	 JsonObject removeMessage = provider.createObjectBuilder().add("action",
+//	 "remove").add("id",
+//	 id).build();
+//	 sendToAllConnectedSessions(removeMessage);
+//	 }
+//	 }
 
 	private com.google.gson.JsonObject getBoardStatus() {
 		com.google.gson.JsonObject jsonObject = new com.google.gson.JsonObject();
@@ -138,7 +139,6 @@ public class UserSessionHandler {
 	}
 
 	private void sendToAllConnectedSessions(JsonObject message) {
-		System.out.println("bcast");
 		for (Session session : sessions) {
 			sendToSession(session, message);
 		}

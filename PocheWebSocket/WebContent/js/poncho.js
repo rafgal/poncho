@@ -1,9 +1,7 @@
 //This file register into WebSocket for votation
 
-var ip_server = window.location.hostname;
-var port = 9171;
-var ws = new WebSocket('ws://' + ip_server + ':' + port
-		+ '/PonchoWebSocket/ponchito');
+var ws = new WebSocket('ws://' + window.location.hostname + ':'
+		+ window.location.port + window.location.pathname + 'ponchito');
 (function() {
 	var poncho = angular.module('poncho', [ 'ui.bootstrap' ]);
 	poncho.directive('radioWithChangeHandler',
@@ -23,6 +21,32 @@ var ws = new WebSocket('ws://' + ip_server + ':' + port
 					}
 				};
 			} ]);
+	poncho.directive('bootstrapSwitch', [ function() {
+		return {
+			restrict : 'A',
+			require : '?ngModel',
+			link : function(scope, element, attrs, ngModel) {
+				element.bootstrapSwitch();
+
+				element.on('switchChange.bootstrapSwitch', function(event,
+						state) {
+					if (ngModel) {
+						scope.$apply(function() {
+							ngModel.$setViewValue(state);
+						});
+					}
+				});
+
+				scope.$watch(attrs.ngModel, function(newValue, oldValue) {
+					if (newValue) {
+						element.bootstrapSwitch('state', true, true);
+					} else {
+						element.bootstrapSwitch('state', false, true);
+					}
+				});
+			}
+		};
+	} ]);
 	poncho.filter('ordinal', function() {
 		return function(value, type, boardStatus) {
 			if (boardStatus == 0) {
@@ -75,12 +99,25 @@ var ws = new WebSocket('ws://' + ip_server + ':' + port
 		};
 		boardCtrl.board = [];
 		boardCtrl.status = 0;
+		boardCtrl.approved = false;
+		boardCtrl.setConformity = function() {
+			boardCtrl.command.comando = 2;
+			delete boardCtrl.command.vote;
+			boardCtrl.command.approved = boardCtrl.approved;
+			ws.send(JSON.stringify(boardCtrl.command));
+			boardCtrl.fields.vote = null;
+			boardCtrl.fields.type = 0;
+		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
 			boardCtrl.status = data.boardStatus;
+			if (boardCtrl.status === 0) {
+				boardCtrl.approved = false;
+			}
 			$scope.$apply();
 		};
 		$scope.vote = function() {
+			boardCtrl.command.comando = 1;
 			boardCtrl.command.vote = {};
 			boardCtrl.command.vote.value = boardCtrl.fields.vote;
 			boardCtrl.command.vote.type = boardCtrl.fields.type;

@@ -59,7 +59,8 @@ public class Websocket {
 				break;
 			case 2:
 				System.out.println("Aprobar votación");
-				sessionHandler.aprobarVotacion(session);
+				boolean approved= jsonMessage.getBoolean("approved");
+				sessionHandler.setConformity(session, approved);
 				break;
 			default:
 				break;

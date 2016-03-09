@@ -3,23 +3,32 @@
 <meta charset="UTF-8">
 <title>Poncho</title>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-	integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="css/theme.css">
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-	integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
-<script type="text/javascript" src="poncho.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<script
+	src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+	integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+	crossorigin="anonymous" />
+<link href="css/bootstrap-switch.css" rel="stylesheet">
+<script src="js/bootstrap-switch.js"></script>
+<script type="text/javascript" src="js/poncho.js"></script>
 </head>
 <body ng-controller="BoardController as boardCtrl">
 	<div id="register" ng-controller="loginController">
-		<input placeholder="Nombre" ng-model="person"></input>
-		<button ng-click="register(person)">Entrar</button>
+		<form ng-submit="register(person)">
+			<input placeholder="Nombre" ng-model="person" autofocus></input>
+			<button >Entrar</button>
+		</form>
 	</div>
 	<div id="board" ng-repeat="voter in boardCtrl.board">
 		<h3>{{voter.nombre}}</h3>
@@ -28,17 +37,21 @@
 	<div id="votation" ng-hide="boardCtrl.status==1">
 		<form ng-submit="vote()">
 			<div class="input-group">
-				<input type="number" min="0" class="form-control" ng-model="boardCtrl.fields.vote" placeholder="valor" aria-describedby="basic-addon1">
+				<input type="number" min="0" class="form-control"
+					ng-model="boardCtrl.fields.vote" placeholder="valor"
+					aria-describedby="basic-addon1" autofocus>
 			</div>
 			<div class="btn-group">
-				<label class="btn btn-primary active" ng-model="boardCtrl.fields.type" btn-radio="0">horas</label> <label class="btn btn-primary"
-					ng-model="boardCtrl.fields.type" btn-radio="1">días</label>
+				<label class="btn btn-primary active"
+					ng-model="boardCtrl.fields.type" btn-radio="0">horas</label> <label
+					class="btn btn-primary" ng-model="boardCtrl.fields.type"
+					btn-radio="1">días</label>
 			</div>
 			<button type="submit" class="btn btn-default">Votar</button>
 		</form>
 	</div>
-	<div id="aprove_vote">
-		<button></button>
+	<div id="aprove_vote" ng-show="boardCtrl.status==1">
+		<input type="checkbox" ng-change="boardCtrl.setConformity()" ng-model="boardCtrl.approved" bootstrap-switch data-on-text="Siguiente" data-off-text="Esperando"/>
 	</div>
 </body>
 </html>
