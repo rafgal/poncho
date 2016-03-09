@@ -39,7 +39,7 @@ public class UserSessionHandler {
 	public void removeSession(Session session) {
 		System.out.println("removeeeee");
 		sessions.remove(session);
-		Usuario usuario = sesionesUsuarios.get(session.getId());
+		Usuario usuario = sesionesUsuarios.get(session.getId());    
 		users.remove(usuario);
 		usersWithVote.remove(usuario);
 		sesionesUsuarios.remove(session.getId());
