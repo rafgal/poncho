@@ -1,9 +1,9 @@
 //This file register into WebSocket for votation
-var hoursPerDay = 7;
 var ws = new WebSocket('ws://' + window.location.hostname + ':'
 		+ window.location.port + window.location.pathname + 'ponchito');
 var usersSortFunction = function(a, b) {
-	return a.voto - b.voto;
+	return a.voto * (a.tipoVoto == 0 ? 1 : hoursPerDay) - b.voto
+			* (b.tipoVoto == 0 ? 1 : hoursPerDay);
 };
 (function() {
 	angular.module('d3', []).factory(
@@ -116,8 +116,6 @@ var usersSortFunction = function(a, b) {
 																													function(
 																															d) {
 																														if (d.tipoVoto === 1) {
-																															console
-																																	.log('tipo dia');
 																															return d.voto
 																																	* hoursPerDay;
 																														} else {
@@ -301,14 +299,15 @@ var usersSortFunction = function(a, b) {
 
 	poncho.filter('avg', function() {
 		return function(value) {
-			if (value < hoursPerDay) {
-				return value + ' horas';
-			} else {
-				return value + ' horas (' + (value / hoursPerDay).toFixed(1) + ' días)';
+			if (value != null) {
+				if (value < hoursPerDay) {
+					return value + ' horas';
+				} else {
+					return value.toFixed(1) + ' horas ('
+							+ (value / hoursPerDay).toFixed(1) + ' días)';
+				}
 			}
-
 		}
-
 	});
 
 	poncho.controller("loginController", function($scope, $http) {
@@ -329,6 +328,8 @@ var usersSortFunction = function(a, b) {
 	poncho.controller("BoardController", function($scope, $http) {
 
 		var boardCtrl = this;
+		boardCtrl.welcomeText=' Welcome to';
+
 		boardCtrl.fields = {
 			type : 0
 		};
@@ -348,6 +349,7 @@ var usersSortFunction = function(a, b) {
 		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
+			boardCtrl.welcomeText='';
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {
@@ -359,9 +361,10 @@ var usersSortFunction = function(a, b) {
 					if (boardCtrl.board[i].tipoVoto === 1) {
 						factor = hoursPerDay;
 					}
-					sum += boardCtrl.board[i].voto*factor;
+					sum += boardCtrl.board[i].voto * factor;
 				}
 				boardCtrl.avg = sum / boardCtrl.board.length;
+				boardCtrl.std=standardDeviation(boardCtrl.board);
 				boardCtrl.board.sort(usersSortFunction);
 				// hard-code data
 				$scope.data = boardCtrl.board;
