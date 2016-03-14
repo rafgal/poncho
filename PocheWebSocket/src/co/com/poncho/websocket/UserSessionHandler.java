@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,7 @@ public class UserSessionHandler {
 	private Set<Session> sessions = new HashSet<>();
 	private Set<Usuario> users = new HashSet<>();
 	private Set<Usuario> usersWithVote=new HashSet<>();
-	private Map<String, Usuario> sesionesUsuarios = new HashMap<String, Usuario>();
+	private Map<Session, Usuario> sesionesUsuarios = new HashMap<Session, Usuario>();
 
 	public void addSession(Session session) {
 		System.out.println("todo bien en add session");
@@ -39,15 +40,15 @@ public class UserSessionHandler {
 	public void removeSession(Session session) {
 		System.out.println("removeeeee");
 		sessions.remove(session);
-		Usuario usuario = sesionesUsuarios.get(session.getId());    
+		Usuario usuario = sesionesUsuarios.get(session);    
 		users.remove(usuario);
 		usersWithVote.remove(usuario);
-		sesionesUsuarios.remove(session.getId());
+		sesionesUsuarios.remove(session);
 		JsonObject addMessage = getBoardStatus();
 		sendToAllConnectedSessions(addMessage);
 	}
 
-	public List getUsers() {
+	public List<Usuario> getUsers() {
 		return new ArrayList<>(users);
 	}
 
@@ -56,13 +57,13 @@ public class UserSessionHandler {
 		users.add(user);
 		JsonObject addMessage = getBoardStatus();
 
-		sesionesUsuarios.put(session.getId(), user);
+		sesionesUsuarios.put(session, user);
 
 		sendToAllConnectedSessions(addMessage);
 	}
 
 	public void registerVote(int voto, int tipoVoto, Session session) {
-		Usuario usuario = sesionesUsuarios.get(session.getId());
+		Usuario usuario = sesionesUsuarios.get(session);
 		usuario.setVoto(voto);
 		usuario.setTipoVoto(tipoVoto);
 		usersWithVote.add(usuario);
@@ -91,7 +92,7 @@ public class UserSessionHandler {
 
 	public void setConformity(Session session, boolean approved) {
 		int numAprobaciones = 0;
-		Usuario usuario = sesionesUsuarios.get(session.getId());
+		Usuario usuario = sesionesUsuarios.get(session);
 		usuario.setAceptado(approved);
 		for (Usuario user : users) {
 			if (user.isAceptado()) {
@@ -110,18 +111,6 @@ public class UserSessionHandler {
 		sendToAllConnectedSessions(addMessage);
 	}
 
-//	 public void removeUser(int id) {
-//	 Usuario user = getUserById(id);
-//	 if (user != null) {
-//	 users.remove(user);
-//	 JsonProvider provider = JsonProvider.provider();
-//	 JsonObject removeMessage = provider.createObjectBuilder().add("action",
-//	 "remove").add("id",
-//	 id).build();
-//	 sendToAllConnectedSessions(removeMessage);
-//	 }
-//	 }
-
 	private com.google.gson.JsonObject getBoardStatus() {
 		com.google.gson.JsonObject jsonObject = new com.google.gson.JsonObject();
 
@@ -139,8 +128,9 @@ public class UserSessionHandler {
 	}
 
 	private void sendToAllConnectedSessions(JsonObject message) {
-		for (Session session : sessions) {
-			sendToSession(session, message);
+		
+		for (Entry<Session, Usuario> entry : sesionesUsuarios.entrySet()) {
+			sendToSession(entry.getKey(), message);
 		}
 	}
 
