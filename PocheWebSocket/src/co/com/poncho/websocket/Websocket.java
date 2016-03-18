@@ -1,7 +1,5 @@
 package co.com.poncho.websocket;
 
-import java.io.StringReader;
-
 import javax.inject.Inject;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -9,13 +7,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import co.com.poncho.model.Usuario;
 
-//@ApplicationScoped
 @ServerEndpoint("/ponchito")
 public class Websocket {
 

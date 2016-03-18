@@ -5,6 +5,11 @@ var usersSortFunction = function(a, b) {
 	return a.voto * (a.tipoVoto == 0 ? 1 : hoursPerDay) - b.voto
 			* (b.tipoVoto == 0 ? 1 : hoursPerDay);
 };
+window.onbeforeunload = closingCode;
+function closingCode() {
+	ws.close();
+	return null;
+}
 (function() {
 	angular.module('d3', []).factory(
 			'd3Service',
@@ -328,7 +333,7 @@ var usersSortFunction = function(a, b) {
 	poncho.controller("BoardController", function($scope, $http) {
 
 		var boardCtrl = this;
-		boardCtrl.welcomeText='Ola ke ase?';
+		boardCtrl.welcomeText = 'Ola ke ase?';
 
 		boardCtrl.fields = {
 			type : 0
@@ -349,7 +354,7 @@ var usersSortFunction = function(a, b) {
 		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
-			boardCtrl.welcomeText='Votar o ke ase?';
+			boardCtrl.welcomeText = 'Votar o ke ase?';
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {
@@ -364,7 +369,7 @@ var usersSortFunction = function(a, b) {
 					sum += boardCtrl.board[i].voto * factor;
 				}
 				boardCtrl.avg = sum / boardCtrl.board.length;
-				boardCtrl.std=standardDeviation(boardCtrl.board);
+				boardCtrl.std = standardDeviation(boardCtrl.board);
 				boardCtrl.board.sort(usersSortFunction);
 				// hard-code data
 				$scope.data = boardCtrl.board;
