@@ -12,11 +12,6 @@ body {
 	text-align: center;
 }
 
-#pnch_register {
-	float: right;
-	margin-top: 5px;
-}
-
 #pnch_name {
 	width: 100%;
 }
