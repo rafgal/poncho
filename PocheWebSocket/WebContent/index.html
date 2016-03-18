@@ -25,14 +25,19 @@
 <script type="text/javascript" src="js/filters.js"></script>
 <script type="text/javascript" src="js/moduleD3.js"></script>
 <!-- Angular Material style sheet -->
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
-<!-- Angular Material Library -->
-<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+  <!-- Angular Material Library -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+  
+  
+  
 </head>
-<body ng-controller="BoardController as boardCtrl">
+<body ng-controller="BoardController as boardCtrl" ngCloak>
+<div layout="column" layout-align="center center" >
 	<div class="page-header">
 		<img style="width: 450px;" ng-src="{{boardCtrl.welcomeText}}" />
 	</div>
@@ -89,6 +94,7 @@
 	<div id="aprove_vote" ng-show="boardCtrl.status==1">
 		<h5>Continuar?</h5>
 		<input type="checkbox" ng-change="boardCtrl.setConformity()" ng-model="boardCtrl.approved" bootstrap-switch data-on-text="Si!" data-off-text="No!" />
+	</div>
 	</div>
 </body>
 </html>
