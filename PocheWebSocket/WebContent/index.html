@@ -37,9 +37,10 @@
   
   
 </head>
-<body ng-controller="BoardController as boardCtrl">
+<body ng-controller="BoardController as boardCtrl" ngCloak>
+<div layout="column" layout-align="center center" >
 	<div class="page-header">
-		<img ng-src="{{boardCtrl.welcomeText}}"/>
+		<img ng-src="{{boardCtrl.welcomeText}}" width="300dp"/>
 	</div>
 	<div ng-show="boardCtrl.status==1">
 		<h4>Resultados</h4>
@@ -89,6 +90,7 @@
 	<div id="aprove_vote" ng-show="boardCtrl.status==1">
 		<h5>Continuar?</h5>
 		<input type="checkbox" ng-change="boardCtrl.setConformity()" ng-model="boardCtrl.approved" bootstrap-switch data-on-text="Si!" data-off-text="No!" />
+	</div>
 	</div>
 </body>
 </html>
