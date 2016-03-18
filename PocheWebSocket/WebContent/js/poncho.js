@@ -328,7 +328,7 @@ var usersSortFunction = function(a, b) {
 	poncho.controller("BoardController", function($scope, $http) {
 
 		var boardCtrl = this;
-		boardCtrl.welcomeText=' Welcome to';
+		boardCtrl.welcomeText='img/olakease.jpg';
 
 		boardCtrl.fields = {
 			type : 0
@@ -349,7 +349,7 @@ var usersSortFunction = function(a, b) {
 		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
-			boardCtrl.welcomeText='';
+			boardCtrl.welcomeText='img/votarokase.jpg';
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {
