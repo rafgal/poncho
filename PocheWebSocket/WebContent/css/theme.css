@@ -1,18 +1,15 @@
 body {
 	margin: 3px;
-	width: 450px;
+	width: 100%;
+	margin: auto;
 }
 
-#pnch_vote_btn{
+#pnch_vote_btn {
 	float: right;
 }
+
 .page-header {
 	text-align: center;
-}
-
-#pnch_register {
-	float: right;
-	margin-top: 5px;
 }
 
 #pnch_name {

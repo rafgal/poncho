@@ -1,6 +1,6 @@
 (function() {
 	
-	var poncho = angular.module('poncho', [ 'd3', 'poncho_directives', 'poncho_filters', 'ui.bootstrap' ]);
+	var poncho = angular.module('poncho', [ 'ngMaterial','ngMessages','d3', 'poncho_directives', 'poncho_filters', 'ui.bootstrap' ]);
 	
 	poncho.controller("loginController", function($scope, $http) {
 
@@ -21,7 +21,7 @@
 	poncho.controller("BoardController", function($scope, $http) {
 
 		var boardCtrl = this;
-		boardCtrl.welcomeText=' Welcome to';
+		boardCtrl.welcomeText='img/poncho.png';
 
 		boardCtrl.fields = {
 			type : 0
@@ -42,7 +42,7 @@
 		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
-			boardCtrl.welcomeText='';
+			boardCtrl.welcomeText='img/poncho2.png';
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {
