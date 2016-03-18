@@ -4,12 +4,16 @@ body {
 	margin: auto;
 }
 
+#main-container {
+	max-width: 1280px;
+}
+
 #pnch_vote_btn {
 	float: right;
 }
 
-.page-header {
-	text-align: center;
+#page-header {
+	height: 280px;
 }
 
 #pnch_name {
