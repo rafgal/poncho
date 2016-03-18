@@ -16,12 +16,28 @@
 	integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
 <link href="css/bootstrap-switch.css" rel="stylesheet">
 <script src="js/bootstrap-switch.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/poncho.js"></script>
+<script type="text/javascript" src="js/directives.js"></script>
+<script type="text/javascript" src="js/filters.js"></script>
+<script type="text/javascript" src="js/moduleD3.js"></script>
+
+<!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+  <!-- Angular Material Library -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+  
+  
+  
 </head>
 <body ng-controller="BoardController as boardCtrl">
 	<div class="page-header">
 		<h1>
-			<img src="img/poncho.png" width="300px"
+			<img src="img/poncho.png" width="300px">
 		</h1>
 	</div>
 	<div ng-show="boardCtrl.status==1">
@@ -40,10 +56,12 @@
 	<div id="register" ng-controller="loginController">
 		<form ng-submit="register(person)">
 			<div class="form-group has-feedback">
-				<input type="text" class="form-control" placeholder="Nombre" ng-model="person" autofocus /> <i
-					class="glyphicon glyphicon-user form-control-feedback"></i>
+			<md-input-container class="md-block" flex-gt-sm>
+            <label>Nombre</label>
+				<input type="text" ng-model="person" /> 
+					</md-input-container>
 			</div>
-			<button id="pnch_register" type="button" class="btn btn-default">Entrar</button>
+			<md-button id="pnch_register" type="button" class="btn btn-default">Entrar</md-button>
 		</form>
 	</div>
 	<div id="board" class="list-group" ng-hide="boardCtrl.status==1">
