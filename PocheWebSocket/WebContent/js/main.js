@@ -5,3 +5,8 @@ var ws = new WebSocket('ws://' + window.location.hostname + ':'
 var usersSortFunction = function(a, b) {
 	return a.voto - b.voto;
 };
+window.onbeforeunload = closingCode;
+function closingCode() {
+	ws.close();
+	return null;
+}
