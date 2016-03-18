@@ -11,6 +11,7 @@
 			$scope.updateBoard(JSON.parse(data.data));
 		}
 		$scope.register = function(person) {
+			console.log("register")
 			if (person != "") {
 				ws.send('{"comando":0,"nombre":"' + person + '"}');
 			}
@@ -20,6 +21,8 @@
 	poncho.controller("BoardController", function($scope, $http) {
 
 		var boardCtrl = this;
+		boardCtrl.welcomeText=' Welcome to';
+
 		boardCtrl.fields = {
 			type : 0
 		};
@@ -39,6 +42,7 @@
 		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
+			boardCtrl.welcomeText='';
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {
@@ -50,9 +54,10 @@
 					if (boardCtrl.board[i].tipoVoto === 1) {
 						factor = hoursPerDay;
 					}
-					sum += boardCtrl.board[i].voto*factor;
+					sum += boardCtrl.board[i].voto * factor;
 				}
 				boardCtrl.avg = sum / boardCtrl.board.length;
+				boardCtrl.std=standardDeviation(boardCtrl.board);
 				boardCtrl.board.sort(usersSortFunction);
 				// hard-code data
 				$scope.data = boardCtrl.board;

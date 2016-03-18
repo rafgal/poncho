@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 public class Usuario {
 
 	String nombre;
-	int voto=-1;
+	float voto=-1;
 	int tipoVoto;
 	boolean aceptado;
 
@@ -22,11 +22,11 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 
-	public int getVoto() {
+	public float getVoto() {
 		return voto;
 	}
 
-	public void setVoto(int voto) {
+	public void setVoto(float voto) {
 		this.voto = voto;
 	}
 

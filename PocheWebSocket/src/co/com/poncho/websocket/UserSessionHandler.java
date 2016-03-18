@@ -62,7 +62,7 @@ public class UserSessionHandler {
 		sendToAllConnectedSessions(addMessage);
 	}
 
-	public void registerVote(int voto, int tipoVoto, Session session) {
+	public void registerVote(float voto, int tipoVoto, Session session) {
 		Usuario usuario = sesionesUsuarios.get(session);
 		usuario.setVoto(voto);
 		usuario.setTipoVoto(tipoVoto);

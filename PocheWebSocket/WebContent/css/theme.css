@@ -1,14 +1,36 @@
-body{
+body {
 	margin: 3px;
+	width: 450px;
 }
-#brd_avg {
+
+#pnch_vote_btn{
+	float: right;
+}
+.page-header {
+	text-align: center;
+}
+
+#pnch_register {
+	float: right;
+	margin-top: 5px;
+}
+
+#pnch_name {
+	width: 100%;
+}
+
+.std_warning {
+	color: #ff5c33;
+}
+
+#brd_avg, #brd_std {
 	color: #1F77B4;
 	font-size: 23px;
 }
 
 #votation {
 	display: none;
-	width: 300px;
+	width: 100%;
 }
 
 #aprove_vote {
