@@ -21,7 +21,7 @@
 	poncho.controller("BoardController", function($scope, $http) {
 
 		var boardCtrl = this;
-		boardCtrl.welcomeText='img/olakease.jpg';
+		boardCtrl.welcomeText='img/poncho.png';
 
 		boardCtrl.fields = {
 			type : 0
@@ -42,7 +42,7 @@
 		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
-			boardCtrl.welcomeText='img/votarokase.jpg';
+			boardCtrl.welcomeText='img/poncho2.png';
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {

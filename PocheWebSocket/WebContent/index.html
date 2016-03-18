@@ -34,9 +34,7 @@
 </head>
 <body ng-controller="BoardController as boardCtrl">
 	<div class="page-header">
-		<h1>
-			<img src="img/poncho.png" width="300px">
-		</h1>
+		<img ng-src="{{boardCtrl.welcomeText}}"/>
 	</div>
 	<div ng-show="boardCtrl.status==1">
 		<h4>Resultados</h4>
