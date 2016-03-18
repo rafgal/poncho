@@ -1,11 +1,13 @@
 body {
 	margin: 3px;
 	width: 450px;
+	margin: auto;
 }
 
-#pnch_vote_btn{
+#pnch_vote_btn {
 	float: right;
 }
+
 .page-header {
 	text-align: center;
 }

@@ -168,7 +168,7 @@ var usersSortFunction = function(a, b) {
 																							})
 																					.attr(
 																							'fill',
-																							"#1F77B4")
+																							"#BBD2FF")
 																					.transition()
 																					.duration(
 																							1000)
@@ -195,7 +195,7 @@ var usersSortFunction = function(a, b) {
 																							'text')
 																					.attr(
 																							'fill',
-																							'#fff')
+																							'#234E88')
 																					.attr(
 																							'y',
 																							function(
@@ -328,7 +328,7 @@ var usersSortFunction = function(a, b) {
 	poncho.controller("BoardController", function($scope, $http) {
 
 		var boardCtrl = this;
-		boardCtrl.welcomeText=' Welcome to';
+		boardCtrl.welcomeText='Ola ke ase?';
 
 		boardCtrl.fields = {
 			type : 0
@@ -349,7 +349,7 @@ var usersSortFunction = function(a, b) {
 		};
 		$scope.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
-			boardCtrl.welcomeText='';
+			boardCtrl.welcomeText='Votar o ke ase?';
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {
