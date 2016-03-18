@@ -8,7 +8,7 @@ public class Usuario {
 	float voto=-1;
 	int tipoVoto;
 	boolean aceptado;
-
+	
 	public Usuario(String nombre) {
 		super();
 		this.nombre = nombre;

@@ -34,7 +34,6 @@ public class UserSessionHandler {
 		System.out.println("todo bien en add session");
 		sessions.add(session);
 		System.out.println(sessions);
-
 	}
 
 	public void removeSession(Session session) {
