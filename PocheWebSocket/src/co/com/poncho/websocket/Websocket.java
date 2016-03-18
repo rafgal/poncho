@@ -37,24 +37,24 @@ public class Websocket {
 		JsonObject jsonMessage = parser.parse(message).getAsJsonObject();
 
 		int comando = jsonMessage.get("comando").getAsInt();
+		Command command=Command.fromInt(comando);
 		System.out.println(comando);
-		switch (comando) {
-		case 0:
+		switch (command) {
+		case REGISTER_USER:
 			System.out.println("Registrar usuario");
 			String nombre = jsonMessage.get("nombre").getAsString();
 			Usuario user = new Usuario(nombre);
 			sessionHandler.addUser(user, session);
 			break;
-
-		case 1:
+		case VOTE:
 			System.out.println("Registrar voto");
 			JsonObject vote = jsonMessage.get("vote").getAsJsonObject();
 			float voto = vote.get("value").getAsFloat();
 			int tipoVoto = vote.get("type").getAsInt();
 			sessionHandler.registerVote(voto, tipoVoto, session);
 			break;
-		case 2:
-			System.out.println("Aprobar votaciÃ³n");
+		case EVAL_RESULTS:
+			System.out.println("Evaluar votación");
 			boolean approved = jsonMessage.get("approved").getAsBoolean();
 			sessionHandler.setConformity(session, approved);
 			break;
