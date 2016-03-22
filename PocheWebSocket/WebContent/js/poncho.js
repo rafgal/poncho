@@ -1,6 +1,6 @@
 (function() {
 	
-	var poncho = angular.module('poncho', [ 'ngMaterial','ngMessages','d3', 'poncho_directives', 'poncho_filters', 'ui.bootstrap' ]);
+	var poncho = angular.module('poncho', [ 'ngMaterial','ngMessages','d3', 'poncho_directives', 'poncho_filters' ]);
 	
 	poncho.controller("loginController", function($scope, $http) {
 

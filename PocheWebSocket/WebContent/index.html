@@ -57,6 +57,7 @@
 		<div class="page-header">
 			<img style="width: 50%;" ng-src="{{boardCtrl.welcomeText}}" />
 		</div>
+
 		<div ng-show="boardCtrl.status==1">
 			<h4>Resultados</h4>
 			<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
@@ -129,6 +130,8 @@
 		<input type="checkbox" ng-change="boardCtrl.setConformity()"
 			ng-model="boardCtrl.approved" bootstrap-switch data-on-text="Si!"
 			data-off-text="No!" />
+	</div>
+	</div>
 	</div>
 </body>
 </html>
