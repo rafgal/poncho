@@ -19,7 +19,6 @@ public class Websocket {
 
 	@OnClose
 	public void onConnectionClose(Session session) {
-		System.out.println("cerrada conexion");
 		sessionHandler.removeSession(session);
 	}
 
@@ -31,35 +30,33 @@ public class Websocket {
 
 	@OnOpen
 	public void open(Session session) {
-		System.out.println("open session ");
 		sessionHandler.addSession(session);
-		roomsHandler.showListRooms(session);
 	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		System.out.println("call message");
 		JsonParser parser = new JsonParser();
 		JsonObject jsonMessage = parser.parse(message).getAsJsonObject();
 
 		int comando = jsonMessage.get("comando").getAsInt();
 		Command command=Command.fromInt(comando);
-		System.out.println(comando);
 		switch (command) {
 		case REGISTER_USER:
 			System.out.println("Registrar usuario");
 			String nombre = jsonMessage.get("nombre").getAsString();
 			String roomName = jsonMessage.get("room").getAsString();
-			Room room = null;
+			Room room = roomsHandler.getRoomByName(roomName);
+			
 			Usuario user = new Usuario(nombre, session);
-			if(jsonMessage.get("property") != null){
+			sessionHandler.addUser(user, session);
+			if(room == null){
 				room = new Room(roomName, user);
 				roomsHandler.addRoom(room);
-			} else {
-				room = roomsHandler.getRoomByName(roomName);
+				sessionHandler.sendToAllConnectedSessions(roomsHandler.getMessageListRooms(Command.ROOMS));
 			}
 			user.setRoom(room);
-			sessionHandler.addUser(user, session);
+			roomsHandler.addUserToRoom(room, user);
+			
 			break;
 //		case VOTE:
 //			System.out.println("Registrar voto");

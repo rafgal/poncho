@@ -7,12 +7,13 @@ public class Room {
 
 	private String name;
 	private Set<Usuario> users;
-	private Usuario propietary;
+	private Usuario owner;
 	private Set<Usuario> usersWithVote=new HashSet<>();
 
-	public Room(String name, Usuario propiertary) {
+	public Room(String name, Usuario owner) {
+		users = new HashSet<Usuario>();
 		setName(name);
-		setPropietary(propiertary);
+		setOwner(owner);
 	}
 	
 	public String getName() {
@@ -33,8 +34,9 @@ public class Room {
 	}
 
 	public void addUser(Usuario user){
-		if(user != null)
+		if(user != null){
 			this.users.add(user);
+		}
 	}
 
 	public void removeUser(Usuario user){
@@ -42,12 +44,12 @@ public class Room {
 			this.users.remove(user);
 	}
 	
-	public Usuario getPropietary() {
-		return propietary;
+	public Usuario getOwner() {
+		return owner;
 	}
 	
-	public void setPropietary(Usuario propietary) {
-		this.propietary = propietary;
+	public void setOwner(Usuario owner) {
+		this.owner = owner;
 	}
 	
 	public Set<Usuario> getUsersWithVote() {

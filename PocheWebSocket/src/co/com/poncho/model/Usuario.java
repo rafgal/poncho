@@ -66,5 +66,4 @@ public class Usuario {
 		return session;
 	}
 	
-	
 }

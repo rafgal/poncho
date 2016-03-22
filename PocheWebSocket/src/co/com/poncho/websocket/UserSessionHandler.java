@@ -1,60 +1,53 @@
 package co.com.poncho.websocket;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.json.JsonObjectBuilder;
-import javax.json.spi.JsonProvider;
+import javax.inject.Inject;
 import javax.websocket.Session;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
+import co.com.poncho.model.Room;
 import co.com.poncho.model.Usuario;
+import co.com.poncho.util.Command;
 
 @ApplicationScoped
 public class UserSessionHandler {
+	
+	@Inject
+	private RoomSessionHandler roomsHandler;
 
 	private Set<Session> sessions = new HashSet<>();
-	//private Set<Usuario> users = new HashSet<>();
-	//private Set<Usuario> usersWithVote=new HashSet<>();
 	private Map<Session, Usuario> sesionesUsuarios = new HashMap<Session, Usuario>();
 
 	public void addSession(Session session) {
-		System.out.println("todo bien en add session");
 		sessions.add(session);
-		System.out.println(sessions);
+		MessageHandler.sendToSession(session, roomsHandler.getMessageListRooms(Command.ROOMS));
 	}
 
 	public void removeSession(Session session) {
-		System.out.println("removeeeee");
+		Usuario user = sesionesUsuarios.get(session);
 		sessions.remove(session);
-		Usuario usuario = sesionesUsuarios.get(session);
-		//users.remove(usuario);
-		//usersWithVote.remove(usuario);
 		sesionesUsuarios.remove(session);
-		//JsonObject addMessage = getBoardStatus();
-		//sendToAllConnectedSessions(addMessage);
+		
+		if(user != null && user.getRoom() != null){
+			Room room = user.getRoom();
+			if(user.equals(room.getOwner())){
+				roomsHandler.removeRoom(room);
+				sendToAllConnectedSessions(roomsHandler.getMessageListRooms(Command.ROOMS));
+				
+			} else {
+				roomsHandler.removeUserToRoom(room, user);
+			}
+		}
 	}
 
 	public void addUser(Usuario user, Session session) {
-		System.out.println("adduser");
-		//users.add(user);
-		//JsonObject addMessage = getBoardStatus();
-
 		sesionesUsuarios.put(session, user);
-
-		//sendToAllConnectedSessions(addMessage);
 	}
 
 //	public void registerVote(float voto, int tipoVoto, Session session) {
@@ -122,12 +115,12 @@ public class UserSessionHandler {
 //		return jsonObject;
 //	}
 //
-//	private void sendToAllConnectedSessions(JsonObject message) {
-//		
-//		for (Entry<Session, Usuario> entry : sesionesUsuarios.entrySet()) {
-//			sendToSession(entry.getKey(), message);
-//		}
-//	}
+	public void sendToAllConnectedSessions(JsonObject message) {
+		Set<Session> sinUser = new HashSet<Session>();
+		sinUser.addAll(sessions);
+		sinUser.removeAll(sesionesUsuarios.keySet());
+		MessageHandler.sendToAllConnectedSessions(sinUser, message);
+	}
 //
 //	private void sendToSession(Session session, JsonObject message) {
 //		try {
