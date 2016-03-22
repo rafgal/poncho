@@ -1,0 +1,61 @@
+package co.com.poncho.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class Room {
+
+	private String name;
+	private Set<Usuario> users;
+	private Usuario propietary;
+	private Set<Usuario> usersWithVote=new HashSet<>();
+
+	public Room(String name, Usuario propiertary) {
+		setName(name);
+		setPropietary(propiertary);
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Set<Usuario> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<Usuario> users) {
+		if(users != null)
+			this.users = users;
+	}
+
+	public void addUser(Usuario user){
+		if(user != null)
+			this.users.add(user);
+	}
+
+	public void removeUser(Usuario user){
+		if(user != null)
+			this.users.remove(user);
+	}
+	
+	public Usuario getPropietary() {
+		return propietary;
+	}
+	
+	public void setPropietary(Usuario propietary) {
+		this.propietary = propietary;
+	}
+	
+	public Set<Usuario> getUsersWithVote() {
+		return usersWithVote;
+	}
+	
+	public void addVote(Usuario user){
+		usersWithVote.add(user);
+	}
+	
+}

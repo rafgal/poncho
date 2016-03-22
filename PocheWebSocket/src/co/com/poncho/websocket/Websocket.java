@@ -10,7 +10,9 @@ import javax.websocket.server.ServerEndpoint;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import co.com.poncho.model.Room;
 import co.com.poncho.model.Usuario;
+import co.com.poncho.util.Command;
 
 @ServerEndpoint("/ponchito")
 public class Websocket {
@@ -23,11 +25,15 @@ public class Websocket {
 
 	@Inject
 	private UserSessionHandler sessionHandler;
+	
+	@Inject
+	private RoomSessionHandler roomsHandler;
 
 	@OnOpen
 	public void open(Session session) {
 		System.out.println("open session ");
 		sessionHandler.addSession(session);
+		roomsHandler.showListRooms(session);
 	}
 
 	@OnMessage
@@ -43,21 +49,30 @@ public class Websocket {
 		case REGISTER_USER:
 			System.out.println("Registrar usuario");
 			String nombre = jsonMessage.get("nombre").getAsString();
-			Usuario user = new Usuario(nombre);
+			String roomName = jsonMessage.get("room").getAsString();
+			Room room = null;
+			Usuario user = new Usuario(nombre, session);
+			if(jsonMessage.get("property") != null){
+				room = new Room(roomName, user);
+				roomsHandler.addRoom(room);
+			} else {
+				room = roomsHandler.getRoomByName(roomName);
+			}
+			user.setRoom(room);
 			sessionHandler.addUser(user, session);
 			break;
-		case VOTE:
-			System.out.println("Registrar voto");
-			JsonObject vote = jsonMessage.get("vote").getAsJsonObject();
-			float voto = vote.get("value").getAsFloat();
-			int tipoVoto = vote.get("type").getAsInt();
-			sessionHandler.registerVote(voto, tipoVoto, session);
-			break;
-		case EVAL_RESULTS:
-			System.out.println("Evaluar votación");
-			boolean approved = jsonMessage.get("approved").getAsBoolean();
-			sessionHandler.setConformity(session, approved);
-			break;
+//		case VOTE:
+//			System.out.println("Registrar voto");
+//			JsonObject vote = jsonMessage.get("vote").getAsJsonObject();
+//			float voto = vote.get("value").getAsFloat();
+//			int tipoVoto = vote.get("type").getAsInt();
+//			sessionHandler.registerVote(voto, tipoVoto, session);
+//			break;
+//		case EVAL_RESULTS:
+//			System.out.println("Evaluar votaciï¿½n");
+//			boolean approved = jsonMessage.get("approved").getAsBoolean();
+//			sessionHandler.setConformity(session, approved);
+//			break;
 		default:
 			break;
 		}
