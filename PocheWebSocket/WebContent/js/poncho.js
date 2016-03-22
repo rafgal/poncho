@@ -7,11 +7,16 @@
 		
 		ws.onmessage = function(response) {
 			var data =JSON.parse(response.data)
-			if(data.comando == 3) {
+			var commando = data.comando;
+			if(commando == 3) {
 				$scope.boards = data.salas;
 				$scope.$apply();
-			} else {
-				console.log("other command");
+			} else if(commando == 4) {
+				console.log("Se ha borrado la sala");
+			} else if(commando == 5) {
+				console.log("Se ha actualizado la sala");
+			}else {
+				console.log("other command " + commando);
 			}
 		}
 		
