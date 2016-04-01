@@ -19,6 +19,11 @@
 				console.log("other command " + commando);
 			}
 		}
+		
+		$scope.changeToCreate = function(board){
+			$("#list-boards").hide();
+			$("#create-board").show();
+		};
 	});
 	
 	poncho.controller("loginController", function($scope, $http) {
