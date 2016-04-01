@@ -10,3 +10,8 @@ function closingCode() {
 	ws.close();
 	return null;
 }
+
+function changeViewCreateRoom(){
+	$("#list-boards").hide();
+	$("#create-board").show();
+}
