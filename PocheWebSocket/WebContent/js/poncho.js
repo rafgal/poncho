@@ -2,27 +2,44 @@
 	
 	var poncho = angular.module('poncho', [ 'ngMaterial','ngMessages','d3', 'poncho_directives', 'poncho_filters' ]);
 	
-	poncho.controller("loginController", function($scope, $http) {
-
-		ws.onmessage = function(data) {
-			$("#register").hide();
-			$("#votation").show();
-			var datas = angular.fromJson(data.data);
-			$scope.updateBoard(JSON.parse(data.data));
+	poncho.controller("ponchoController", function($scope){
+		$scope.welcomeText='img/poncho.png';
+		
+		ws.onmessage = function(response) {
+			var data =JSON.parse(response.data)
+			var commando = data.comando;
+			if(commando == 3) {
+				$scope.boards = data.salas;
+				$scope.$apply();
+			} else if(commando == 4) {
+				console.log("Se ha borrado la sala");
+			} else if(commando == 5) {
+				console.log("Se ha actualizado la sala");
+			}else {
+				console.log("other command " + commando);
+			}
 		}
-		$scope.register = function(person) {
-			console.log("register")
+		
+		$scope.changeToCreate = function(board){
+			$("#list-boards").hide();
+			$("#create-board").show();
+		};
+	});
+	
+	poncho.controller("loginController", function($scope, $http) {
+		
+		$scope.register = function(person, boardCurrent) {
+			console.log("person " + person + " board " + boardCurrent)
 			if (person != "") {
-				ws.send('{"comando":0,"nombre":"' + person + '"}');
+				ws.send('{"comando":0,"nombre":"' + person + '", "room":"' + boardCurrent + '"}');
 			}
 		};
 	});
 
-	poncho.controller("BoardController", function($scope, $http) {
+	poncho.controller("BoardController", function($http) {
 
 		var boardCtrl = this;
-		boardCtrl.welcomeText='img/poncho.png';
-
+		
 		boardCtrl.fields = {
 			type : 0
 		};
@@ -40,9 +57,10 @@
 			boardCtrl.fields.vote = null;
 			boardCtrl.fields.type = 0;
 		};
-		$scope.updateBoard = function(data) {
+		
+		boardCtrl.updateBoard = function(data) {
 			boardCtrl.board = data.usuarios;
-			boardCtrl.welcomeText='img/poncho2.png';
+			boardCtrl.welcomeText='img/poncho2.png'; //revisar
 			console.log(boardCtrl.board);
 			boardCtrl.status = data.boardStatus;
 			if (boardCtrl.status === 0) {
@@ -60,11 +78,12 @@
 				boardCtrl.std=standardDeviation(boardCtrl.board);
 				boardCtrl.board.sort(usersSortFunction);
 				// hard-code data
-				$scope.data = boardCtrl.board;
+				boardCtrl.data = boardCtrl.board;
 			}
-			$scope.$apply();
+			boardCtrl.$apply();
 		};
-		$scope.vote = function() {
+		
+		boardCtrl.vote = function() {
 			boardCtrl.command.comando = 1;
 			boardCtrl.command.vote = {};
 			boardCtrl.command.vote.value = boardCtrl.fields.vote;
@@ -73,4 +92,18 @@
 			ws.send(JSON.stringify(boardCtrl.command));
 		}
 	});
+	
+	poncho.controller('ListCtrl', function($mdDialog) {
+		this.navigateTo = function(to, event) {
+		    $mdDialog.show(
+		      $mdDialog.alert()
+		        .title('Navigating')
+		        .textContent('Imagine being taken to ' + to)
+		        .ariaLabel('Navigation demo')
+		        .ok('Neat!')
+		        .targetEvent(event)
+		    );
+		  };
+	});
+	
 })();

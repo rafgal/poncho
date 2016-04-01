@@ -1,90 +1,118 @@
 <html ng-app="poncho">
-<head>
-<meta charset="UTF-8">
-<title>Poncho</title>
-<link rel="icon" type="image/png" href="img/favicon/favicon-32x32.png" sizes="32x32" />
-<link rel="icon" type="image/png" href="img/favicon/favicon-16x16.png" sizes="16x16" />
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="js/math.js"></script>
-<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-<link rel="stylesheet" href="css/theme.css">
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/poncho.js"></script>
-<script type="text/javascript" src="js/directives.js"></script>
-<script type="text/javascript" src="js/filters.js"></script>
-<script type="text/javascript" src="js/moduleD3.js"></script>
-<!-- Angular Material style sheet -->
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
-<!-- Angular Material Library -->
-<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
-</head>
-<body layout="row" layout-align="center start" ng-controller="BoardController as boardCtrl" ngCloak>
-	<div id="main-container" layout="column" layout-align="center stretch">
-		<div layout="row" layout-align="center center" id="page-header">
-			<img style="width: 450px;" ng-src="{{boardCtrl.welcomeText}}" />
-		</div>
-		<div ng-show="boardCtrl.status==1">
-			<h4>Resultados</h4>
-			<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
-			<div class="list-group">
-				<a href="#" class="list-group-item">
-					<h4 class="list-group-item-heading">Promedio:</h4>
-					<p class="list-group-item-text">{{boardCtrl.avg | avg}}</p>
-				</a> <a href="#" class="list-group-item">
-					<h4 class="list-group-item-heading">Desviación estandar:</h4>
-					<p class="list-group-item-text">{{boardCtrl.std.toFixed(2)}}</p>
-				</a>
+	<head>
+		<meta charset="UTF-8">
+		<title>Poncho</title>
+		<link rel="icon" type="image/png" href="img/favicon/favicon-32x32.png" sizes="32x32" />
+		<link rel="icon" type="image/png" href="img/favicon/favicon-16x16.png" sizes="16x16" />
+		<!-- Angular Material style sheet -->
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+		<link rel="stylesheet" href="css/theme.css">
+		
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script src="js/math.js"></script>
+		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.js"></script>
+		<!-- Angular Material Library -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/poncho.js"></script>
+		<script type="text/javascript" src="js/directives.js"></script>
+		<script type="text/javascript" src="js/filters.js"></script>
+		<script type="text/javascript" src="js/moduleD3.js"></script>
+	</head>
+	<body ng-controller="ponchoController as ponchoCtrl" ngCloak>
+		<div layout="column" layout-align="center center">
+			<div class="page-header">
+					<img style="width: 50%;" ng-src="{{welcomeText}}" />
 			</div>
-		</div>
-		<div id="register" ng-controller="loginController">
-			<form ng-submit="register(person)" name="loginForm">
+			
+			<div ng-controller="loginController">
 				<div class="form-group has-feedback" layout="column" layout-align="center stretch">
-					<md-input-container class="md-block" flex-gt-sm> <label>Nombre</label> <input type="text" name="name" required
-						md-no-asterisk ng-model="person" />
-					<div ng-messages="loginForm.name.$error">
-						<div ng-message="required">Necesito saber tu nombre!</div>
-					</div>
-					<div layout="row" layout-align="end start">
-						<md-button id="pnch_register" type="submit" class="btn btn-default">Entrar</md-button>
-					</div>
+					<md-input-container class="md-block" flex-gt-sm> 
+						<label>Nombre</label>
+						<input type="text" name="name" required md-no-asterisk ng-model="person" />
+						<div ng-messages="loginForm.name.$error">
+							<div ng-message="required">This is required.</div>
+						</div>
 					</md-input-container>
+					<div id="list-boards" >
+						<md-list >
+							<md-list-item ng-repeat="board in boards">
+								<md-input-container>
+									<input type="hidden" ng-value="board"  aria-label="{{ board }}">
+									<md-button ng-click="register(person, board)" >{{board}}</md-button>
+								</md-input-container>
+							</md-list-item>
+						</md-list>
+						<div layout="row" layout-align="end start">
+							<md-button id="pnch_create" class="btn btn-default" ng-click="changeToCreate()">Crear sala</md-button>
+						</div>
+					</div>
+					<div id="create-board" layout="column" style="display:none;">
+						<md-input-container class="md-block" flex-gt-sm> 
+							<label>Nombre Sala</label>
+							<input type="text" name="board" required md-no-asterisk ng-model="board" />
+							<div ng-messages="loginForm.name.$error">
+								<div ng-message="required">This is required.</div>
+							</div>
+						</md-input-container>
+						<md-button class="btn btn-default" ng-click="register(person, board)">Entrar</md-button>
+					</div>
 				</div>
-		</div>
-		</form>
-		<div ng-hide="boardCtrl.status==1">
-			<div class="poncho-list-item" layout="row" ng-repeat="voter in boardCtrl.board" ng-class="{'ha-votado': voter.voto>=0}">
-				<h4 flex="90">{{voter.nombre}}</h4>
-				<md-icon flex="10" md-font-set="material-icons" ng-style="{color: voter.voto<0?'Black':'White'}">{{voter.voto<0?"hourglass_empty":"done"}}
-				<md-tooltip>{{voter.voto<0?"Pensando":"Votó"}}</md-tooltip></md-icon>
 			</div>
 		</div>
-		<div id="votation" ng-hide="boardCtrl.status==1">
-			<form name ="votoForm"ng-submit="vote()">
-				<div layout="row" layout-align="space-around center">
-					<md-input-container> <label>Voto</label> <input name="value" min="0" step="any" required ng-model="boardCtrl.fields.vote" type="number">
-					<div ng-messages="votoForm.value.$error">
-						<div ng-message="required">Necesito un valor!</div>
-					</div>
-					</md-input-container>
-					<md-switch class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="boardCtrl.fields.type">
-					{{boardCtrl.fields.type==0?'horas':'días'}} </md-switch>
+		<!-- <div ng-controller="BoardController as boardCtrl">
+	
+			//<div layout="column" layout-align="center center">
+				<div class="page-header">
+					<img style="width: 50%;" ng-src="{{boardCtrl.welcomeText}}" />
 				</div>
-				<md-button type="submit">Votar</md-button>
-			</form>
-		</div>
-		<div id="aprove_vote" ng-show="boardCtrl.status==1">
-			<h5>Continuar?</h5>
-			<input type="checkbox" ng-change="boardCtrl.setConformity()" ng-model="boardCtrl.approved" bootstrap-switch data-on-text="Si!" data-off-text="No!" />
-		</div>
-	</div>
-	</div>
-</body>
+	
+				<div ng-show="boardCtrl.status==1">
+					<h4>Resultados</h4>
+					<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
+					<div class="list-group">
+						<a href="#" class="list-group-item">
+							<h4 class="list-group-item-heading">Promedio:</h4>
+							<p class="list-group-item-text">{{boardCtrl.avg | avg}}</p>
+						</a> <a href="#" class="list-group-item">
+							<h4 class="list-group-item-heading">Desviación estandar:</h4>
+							<p class="list-group-item-text">{{boardCtrl.std.toFixed(2)}}</p>
+						</a>
+					</div>
+				</div>
+			
+			
+				 <div id="board" class="list-group" ng-hide="boardCtrl.status==1">
+					<a href="#" class="list-group-item" ng-class="{'active': voter.voto>=0}" ng-repeat="voter in boardCtrl.board">
+						<h4 class="list-group-item-heading">{{voter.nombre}}</h4>
+						<p class="list-group-item-text">
+							<i class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok': voter.voto>=0,'glyphicon-hourglass': voter.voto<0}"></i>
+						</p>
+					</a>
+				</div>
+				<div id="votation" ng-hide="boardCtrl.status==1">
+					<form ng-submit="vote()">
+						<div class="form-group has-feedback">
+							<input type="number" min="0" step="any" class="form-control" placeholder="voto" ng-model="boardCtrl.fields.vote" autofocus />
+							<i class="glyphicon glyphicon-time form-control-feedback"></i>
+						</div>
+						<div class="btn-group">
+							<label class="btn btn-primary active" ng-model="boardCtrl.fields.type" btn-radio="0">horas</label> <label class="btn btn-primary" ng-model="boardCtrl.fields.type" btn-radio="1">días</label>
+						</div>
+						<button id="pnch_vote_btn" type="submit" class="btn btn-default">Votar</button>
+					</form>
+				</div>
+				<div id="aprove_vote" ng-show="boardCtrl.status==1">
+					<h5>Continuar?</h5>
+					<input type="checkbox" ng-change="boardCtrl.setConformity()" ng-model="boardCtrl.approved" bootstrap-switch data-on-text="Si!" data-off-text="No!" />
+				</div> 
+			</div>
+		</div> -->
+	</body>
 </html>
