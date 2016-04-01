@@ -32,7 +32,10 @@
 			console.log("person " + person + " board " + boardCurrent)
 			if (person != "") {
 				ws.send('{"comando":0,"nombre":"' + person + '", "room":"' + boardCurrent + '"}');
+			}else{
+				
 			}
+			
 		};
 	});
 
