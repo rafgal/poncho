@@ -44,9 +44,9 @@
 	});
 
 	poncho.controller("BoardController", function($scope, $http) {
-
-		var boardCtrl = $scope;
 		
+		var boardCtrl = $scope;
+
 		boardCtrl.fields = {
 			type : 0
 		};
@@ -56,6 +56,7 @@
 		boardCtrl.usersBoard = [];
 		boardCtrl.status = 0;
 		boardCtrl.approved = false;
+		
 		boardCtrl.setConformity = function() {
 			boardCtrl.command.comando = 2;
 			delete boardCtrl.command.vote;
