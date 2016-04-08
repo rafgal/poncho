@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.SessionSynchronization;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.Session;
@@ -120,6 +121,10 @@ public class UserSessionHandler {
 		sinUser.addAll(sessions);
 		sinUser.removeAll(sesionesUsuarios.keySet());
 		MessageHandler.sendToAllConnectedSessions(sinUser, message);
+	}
+	
+	public Usuario getUserBySession(Session session){
+		return sesionesUsuarios.get(session);
 	}
 //
 //	private void sendToSession(Session session, JsonObject message) {

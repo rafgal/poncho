@@ -1,17 +1,13 @@
 package co.com.poncho.websocket;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import co.com.poncho.model.Room;
 import co.com.poncho.model.Usuario;
@@ -94,6 +90,15 @@ public class RoomSessionHandler {
 		message.addProperty("comando", command.getValue());
 		message.add("salas", jsonArray);
 		return message;
+	}
+	
+	public void registerVote(float voto, int tipoVoto, Usuario usuario) {
+		usuario.setVoto(voto);
+		usuario.setTipoVoto(tipoVoto);
+		Room room = usuario.getRoom();
+		room.addVote(usuario);
+		JsonObject voteMessage = getRoomStatus(room);
+		sendToAllConnectedSessions(room, voteMessage);
 	}
 
 }

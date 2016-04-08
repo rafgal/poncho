@@ -120,7 +120,7 @@
 			boardCtrl.command.vote.value = boardCtrl.fields.vote;
 			boardCtrl.command.vote.type = boardCtrl.fields.type;
 			console.log(JSON.stringify(boardCtrl.command));
-			//ws.send(JSON.stringify(boardCtrl.command));
+			ws.send(JSON.stringify(boardCtrl.command));
 		}
 	});
 	
