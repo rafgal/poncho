@@ -4,6 +4,30 @@ body {
 	margin: auto;
 }
 
+.votar-btn {
+	float: right;
+}
+
+#power-votar{
+	position:absolute;
+	top: 50px;
+	right: 250px;
+    background: white;
+    color: rgb(63,81,181);
+}
+#power-votar:hover {
+	background: rgb(63,81,181);
+    color: white;
+}
+
+#tamaño-dia-horas {
+	width: 100px
+}
+
+#tamaño-dia-horas {
+	width: 100px
+}
+
 #main-container {
 	max-width: 1280px;
 }
