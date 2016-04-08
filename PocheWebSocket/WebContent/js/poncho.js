@@ -15,14 +15,21 @@
 				console.log("Se ha borrado la sala");
 			} else if(commando == 5) {
 				console.log("Se ha actualizado la sala");
+				$scope.changeToBoard();
+				$scope.$broadcast('updateBoard', data.board);
 			}else {
 				console.log("other command " + commando);
 			}
 		}
 		
-		$scope.changeToCreate = function(board){
-			$("#list-boards").hide();
-			$("#create-board").show();
+		$scope.changeToBoard = function(){
+			$("#login-view").hide();
+			$("#board-view").show();
+		};
+		
+		$scope.changeToCreate = function(){
+			$("#boards-view").hide();
+			$("#create-board-view").show();
 		};
 	});
 	
@@ -36,19 +43,20 @@
 		};
 	});
 
-	poncho.controller("BoardController", function($http) {
-
-		var boardCtrl = this;
+	poncho.controller("BoardController", function($scope, $http) {
 		
+		var boardCtrl = $scope;
+
 		boardCtrl.fields = {
 			type : 0
 		};
 		boardCtrl.command = {
 			comando : 1
 		};
-		boardCtrl.board = [];
+		boardCtrl.usersBoard = [];
 		boardCtrl.status = 0;
 		boardCtrl.approved = false;
+		
 		boardCtrl.setConformity = function() {
 			boardCtrl.command.comando = 2;
 			delete boardCtrl.command.vote;
@@ -58,30 +66,52 @@
 			boardCtrl.fields.type = 0;
 		};
 		
-		boardCtrl.updateBoard = function(data) {
-			boardCtrl.board = data.usuarios;
-			boardCtrl.welcomeText='img/poncho2.png'; //revisar
-			console.log(boardCtrl.board);
-			boardCtrl.status = data.boardStatus;
-			if (boardCtrl.status === 0) {
-				boardCtrl.approved = false;
-			} else {
-				var sum = 0;
-				for (var i = 0; i < boardCtrl.board.length; i++) {
-					var factor = 1;
-					if (boardCtrl.board[i].tipoVoto === 1) {
-						factor = hoursPerDay;
-					}
-					sum += boardCtrl.board[i].voto * factor;
-				}
-				boardCtrl.avg = sum / boardCtrl.board.length;
-				boardCtrl.std=standardDeviation(boardCtrl.board);
-				boardCtrl.board.sort(usersSortFunction);
-				// hard-code data
-				boardCtrl.data = boardCtrl.board;
-			}
-			boardCtrl.$apply();
-		};
+		$scope.$on('updateBoard', function (event, data) {
+		  boardCtrl.usersBoard = data.usuarios;
+		  boardCtrl.status = data.boardStatus;
+		  if (boardCtrl.status === 0) {
+			  boardCtrl.approved = false;
+		  } else {
+			  var sum = 0;
+			  for (var i = 0; i < boardCtrl.board.length; i++) {
+				  var factor = 1;
+				  if (boardCtrl.board[i].tipoVoto === 1) {
+					  factor = hoursPerDay;
+				  }
+				  sum += boardCtrl.board[i].voto * factor;
+			  }
+			  boardCtrl.avg = sum / boardCtrl.board.length;
+			  boardCtrl.std=standardDeviation(boardCtrl.board);
+			  boardCtrl.board.sort(usersSortFunction);
+			  // hard-code data
+			  boardCtrl.data = boardCtrl.board;
+		  }
+		  $scope.$apply();
+		});
+		
+//		boardCtrl.updateBoard = function(data) {
+//			boardCtrl.board = data.usuarios;
+//			boardCtrl.welcomeText='img/poncho2.png'; //revisar
+//			boardCtrl.status = data.boardStatus;
+//			if (boardCtrl.status === 0) {
+//				boardCtrl.approved = false;
+//			} else {
+//				var sum = 0;
+//				for (var i = 0; i < boardCtrl.board.length; i++) {
+//					var factor = 1;
+//					if (boardCtrl.board[i].tipoVoto === 1) {
+//						factor = hoursPerDay;
+//					}
+//					sum += boardCtrl.board[i].voto * factor;
+//				}
+//				boardCtrl.avg = sum / boardCtrl.board.length;
+//				boardCtrl.std=standardDeviation(boardCtrl.board);
+//				boardCtrl.board.sort(usersSortFunction);
+//				// hard-code data
+//				boardCtrl.data = boardCtrl.board;
+//			}
+//			boardCtrl.$apply();
+//		};
 		
 		boardCtrl.vote = function() {
 			boardCtrl.command.comando = 1;
@@ -89,7 +119,7 @@
 			boardCtrl.command.vote.value = boardCtrl.fields.vote;
 			boardCtrl.command.vote.type = boardCtrl.fields.type;
 			console.log(JSON.stringify(boardCtrl.command));
-			ws.send(JSON.stringify(boardCtrl.command));
+			//ws.send(JSON.stringify(boardCtrl.command));
 		}
 	});
 	

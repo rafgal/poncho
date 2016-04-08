@@ -1,13 +1,17 @@
 package co.com.poncho.websocket;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import co.com.poncho.model.Room;
 import co.com.poncho.model.Usuario;
@@ -56,19 +60,22 @@ public class RoomSessionHandler {
 
 	private JsonObject getRoomStatus(Room room) {
 		JsonObject message = new JsonObject();
+		JsonObject board = new JsonObject();
 		message.addProperty("comando", Command.UPDATE_ROOM.getValue());
 		
-//		JsonArray jsonArray = new JsonArray();
-//		
-//		for (Usuario usu : room.getUsers()) {
-//			jsonArray.add(new JsonParser().parse(usu.getEstado()).getAsJsonObject());
-//		}
-//		int boardStatus=0;
-//		if(room.getUsersWithVote().size()==room.getUsers().size())
-//			boardStatus=1;
-//		
-//		message.addProperty("boardStatus", boardStatus);
-//		message.add("usuarios", jsonArray);
+		JsonArray jsonArray = new JsonArray();
+		JsonObject user = new JsonObject();
+		for (Usuario usu : room.getUsers()) {
+			user = new JsonObject();
+			user.addProperty("nombre", usu.getNombre());
+			user.addProperty("voto", usu.getVoto());
+			jsonArray.add(user);
+		}
+		int boardStatus= (room.getUsersWithVote().size()==room.getUsers().size()) ? 1 : 0;
+		
+		board.addProperty("boardStatus", boardStatus);
+		board.add("usuarios", jsonArray);
+		message.add("board", board);
 		return message;
 	}
 
