@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -21,19 +23,17 @@ public class UserSessionHandler {
 	@Inject
 	private RoomSessionHandler roomsHandler;
 
-	private Set<Session> sessions = new HashSet<>();
 	private Map<Session, Usuario> sesionesUsuarios = new HashMap<Session, Usuario>();
+	private Map<String, Session> sessionsId=new TreeMap<String, Session>();
 
 	public void addSession(Session session) {
-		sessions.add(session);
+		sesionesUsuarios.put(session, null);
 		MessageHandler.sendToSession(session, roomsHandler.getMessageListRooms(Command.ROOMS));
 	}
 
 	public void removeSession(Session session) {
-		Usuario user = sesionesUsuarios.get(session);
-		sessions.remove(session);
-		sesionesUsuarios.remove(session);
-		
+		Usuario user = sesionesUsuarios.remove(session);
+		sessionsId.remove(user.getSession().getId());
 		if(user != null && user.getRoom() != null){
 			Room room = user.getRoom();
 			if(user.equals(room.getOwner())){
@@ -48,6 +48,16 @@ public class UserSessionHandler {
 
 	public void addUser(Usuario user, Session session) {
 		sesionesUsuarios.put(session, user);
+		sessionsId.put(session.getId(), session);
+	}
+	
+	public void recoverUser(String oldSessionId, Session newSession){
+//		Session oldSession = sessionsId.get(oldSessionId);
+//		Usuario usuario = sesionesUsuarios.remove(oldSession);
+//		sessions.remove(oldSession);
+//		sessions.add(newSession);
+//		cookieSessionMap.put(cookieSession, newSession);
+//		sesionesUsuarios.put(newSession, usuario);
 	}
 
 //	public void registerVote(float voto, int tipoVoto, Session session) {
@@ -117,7 +127,7 @@ public class UserSessionHandler {
 //
 	public void sendToAllConnectedSessions(JsonObject message) {
 		Set<Session> sinUser = new HashSet<Session>();
-		sinUser.addAll(sessions);
+		sinUser.addAll(sesionesUsuarios.keySet());
 		sinUser.removeAll(sesionesUsuarios.keySet());
 		MessageHandler.sendToAllConnectedSessions(sinUser, message);
 	}
