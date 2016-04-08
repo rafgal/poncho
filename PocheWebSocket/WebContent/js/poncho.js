@@ -67,6 +67,7 @@
 		};
 		
 		$scope.$on('updateBoard', function (event, data) {
+			$("#votation").show();
 		  boardCtrl.usersBoard = data.usuarios;
 		  boardCtrl.status = data.boardStatus;
 		  if (boardCtrl.status === 0) {
