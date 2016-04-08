@@ -87,6 +87,7 @@
 		</div>
 		<div id="votation" ng-hide="boardCtrl.status==1">
 			<form name="votoForm" ng-submit="vote()">
+			<md-button id = "power-votar" class="md-fab md-primary" aria-label="Use Android"><i class="material-icons">power_settings_new</i></md-button>
 				<div layout="row" layout-align="space-around center">
 					<md-input-container> <label>Voto</label> <input
 						name="value" min="0" step="any" required
