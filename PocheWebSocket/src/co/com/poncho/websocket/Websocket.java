@@ -67,11 +67,12 @@ public class Websocket {
 			user = sessionHandler.getUserBySession(session);
 			roomsHandler.registerVote(voto, tipoVoto, user);
 			break;
-//		case EVAL_RESULTS:
-//			System.out.println("Evaluar votaci�n");
-//			boolean approved = jsonMessage.get("approved").getAsBoolean();
-//			sessionHandler.setConformity(session, approved);
-//			break;
+		case EVAL_RESULTS:
+			System.out.println("Evaluar votación");
+			boolean approved = jsonMessage.get("approved").getAsBoolean();
+			user = sessionHandler.getUserBySession(session);
+			roomsHandler.setConformity(user, approved);
+			break;
 		default:
 			break;
 		}

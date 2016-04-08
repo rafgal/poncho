@@ -50,15 +50,6 @@ public class UserSessionHandler {
 	public void addUser(Usuario user, Session session) {
 		sesionesUsuarios.put(session, user);
 	}
-
-//	public void registerVote(float voto, int tipoVoto, Session session) {
-//		Usuario usuario = sesionesUsuarios.get(session);
-//		usuario.setVoto(voto);
-//		usuario.setTipoVoto(tipoVoto);
-//		usersWithVote.add(usuario);
-//		JsonObject voteMessage = getBoardStatus();
-//		sendToAllConnectedSessions(voteMessage);
-//	}
 //
 //	private JsonObject createVoteMessage() {
 //		JsonProvider provider = JsonProvider.provider();
@@ -79,43 +70,7 @@ public class UserSessionHandler {
 //		return voteMessage;
 //	}
 //
-//	public void setConformity(Session session, boolean approved) {
-//		int numAprobaciones = 0;
-//		Usuario usuario = sesionesUsuarios.get(session);
-//		usuario.setAceptado(approved);
-//		for (Usuario user : users) {
-//			if (user.isAceptado()) {
-//				numAprobaciones++;
-//			}
-//		}
-//		if (numAprobaciones >= sesionesUsuarios.size()) {
-//			
-//			for (Usuario user : users) {
-//				user.setAceptado(false);
-//				user.setVoto(-1);
-//			}
-//			usersWithVote.clear();
-//		}
-//		JsonObject addMessage = getBoardStatus();
-//		sendToAllConnectedSessions(addMessage);
-//	}
-//
-//	private com.google.gson.JsonObject getBoardStatus() {
-//		com.google.gson.JsonObject jsonObject = new com.google.gson.JsonObject();
-//
-//		JsonArray jsonArray = new JsonArray();
-//
-//		for (Usuario usu : users) {
-//			jsonArray.add(new JsonParser().parse(usu.getEstado()).getAsJsonObject());
-//		}
-//		int boardStatus=0;
-//		if(usersWithVote.size()==users.size())
-//			boardStatus=1;
-//		jsonObject.addProperty("boardStatus", boardStatus);
-//		jsonObject.add("usuarios", jsonArray);
-//		return jsonObject;
-//	}
-//
+
 	public void sendToAllConnectedSessions(JsonObject message) {
 		Set<Session> sinUser = new HashSet<Session>();
 		sinUser.addAll(sessions);
@@ -126,13 +81,4 @@ public class UserSessionHandler {
 	public Usuario getUserBySession(Session session){
 		return sesionesUsuarios.get(session);
 	}
-//
-//	private void sendToSession(Session session, JsonObject message) {
-//		try {
-//			session.getBasicRemote().sendText(message.toString());
-//		} catch (IOException ex) {
-//			sessions.remove(session);
-//			Logger.getLogger(UserSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
-//		}
-//	}
 }

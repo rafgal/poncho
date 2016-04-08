@@ -60,4 +60,22 @@ public class Room {
 		usersWithVote.add(user);
 	}
 	
+	public void resetRoom(){
+		for (Usuario usuario : users) {
+			usuario.setAceptado(false);
+			usuario.setVoto(-1);
+		}
+		usersWithVote.clear();
+	}
+	
+	public int getUserAccpted(){
+		int numAprobaciones = 0;
+		for (Usuario user : users) {
+			if (user.isAceptado()) {
+				numAprobaciones++;
+			}
+		}
+		return numAprobaciones;
+	}
+	
 }

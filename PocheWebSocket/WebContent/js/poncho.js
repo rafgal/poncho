@@ -74,45 +74,21 @@
 			  boardCtrl.approved = false;
 		  } else {
 			  var sum = 0;
-			  for (var i = 0; i < boardCtrl.board.length; i++) {
+			  for (var i = 0; i < boardCtrl.usersBoard.length; i++) {
 				  var factor = 1;
-				  if (boardCtrl.board[i].tipoVoto === 1) {
+				  if (boardCtrl.usersBoard[i].tipoVoto === 1) {
 					  factor = hoursPerDay;
 				  }
-				  sum += boardCtrl.board[i].voto * factor;
+				  sum += boardCtrl.usersBoard[i].voto * factor;
 			  }
-			  boardCtrl.avg = sum / boardCtrl.board.length;
-			  boardCtrl.std=standardDeviation(boardCtrl.board);
-			  boardCtrl.board.sort(usersSortFunction);
+			  boardCtrl.avg = sum / boardCtrl.usersBoard.length;
+			  boardCtrl.std=standardDeviation(boardCtrl.usersBoard);
+			  boardCtrl.usersBoard.sort(usersSortFunction);
 			  // hard-code data
-			  boardCtrl.data = boardCtrl.board;
+			  boardCtrl.data = boardCtrl.usersBoard;
 		  }
 		  $scope.$apply();
 		});
-		
-//		boardCtrl.updateBoard = function(data) {
-//			boardCtrl.board = data.usuarios;
-//			boardCtrl.welcomeText='img/poncho2.png'; //revisar
-//			boardCtrl.status = data.boardStatus;
-//			if (boardCtrl.status === 0) {
-//				boardCtrl.approved = false;
-//			} else {
-//				var sum = 0;
-//				for (var i = 0; i < boardCtrl.board.length; i++) {
-//					var factor = 1;
-//					if (boardCtrl.board[i].tipoVoto === 1) {
-//						factor = hoursPerDay;
-//					}
-//					sum += boardCtrl.board[i].voto * factor;
-//				}
-//				boardCtrl.avg = sum / boardCtrl.board.length;
-//				boardCtrl.std=standardDeviation(boardCtrl.board);
-//				boardCtrl.board.sort(usersSortFunction);
-//				// hard-code data
-//				boardCtrl.data = boardCtrl.board;
-//			}
-//			boardCtrl.$apply();
-//		};
 		
 		boardCtrl.vote = function() {
 			boardCtrl.command.comando = 1;

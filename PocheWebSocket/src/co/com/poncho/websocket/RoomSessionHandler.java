@@ -100,5 +100,17 @@ public class RoomSessionHandler {
 		JsonObject voteMessage = getRoomStatus(room);
 		sendToAllConnectedSessions(room, voteMessage);
 	}
+	
+	public void setConformity(Usuario usuario, boolean approved) {
+		Room room = usuario.getRoom();
+		usuario.setAceptado(approved);
+		
+		if (room.getUserAccpted() >= room.getUsers().size()) {
+			room.resetRoom();
+		}
+		
+		JsonObject voteMessage = getRoomStatus(room);
+		sendToAllConnectedSessions(room, voteMessage);
+	}
 
 }
