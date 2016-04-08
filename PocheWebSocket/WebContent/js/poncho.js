@@ -54,7 +54,7 @@
 			comando : 1
 		};
 		boardCtrl.usersBoard = [];
-		boardCtrl.status = 0;
+		boardCtrl.status = -1;
 		boardCtrl.approved = false;
 		
 		boardCtrl.setConformity = function() {

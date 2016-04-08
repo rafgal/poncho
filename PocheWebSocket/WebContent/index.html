@@ -104,7 +104,7 @@
 					</a>
 				</div>
 				
-				<div id="votation" ng-hide="status==1">
+				<div id="votation" ng-hide="status!=0">
 					<form ng-submit="vote()">
 						<div class="form-group has-feedback">
 							<input type="number" min="0" step="any" class="form-control" placeholder="voto" ng-model="fields.vote" autofocus />
