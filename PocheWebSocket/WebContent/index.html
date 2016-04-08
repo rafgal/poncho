@@ -114,10 +114,11 @@
 				</div>
 
 				<div id="aprove_vote" ng-show="status==1">
-					<h5>Continuar?</h5>
-					<input type="checkbox" ng-change="setConformity()"
-						ng-model="approved" bootstrap-switch data-on-text="Si!"
-						data-off-text="No!" />
+					<md-button class="btn btn-default" ng-click="resetRoom()">Volver a votar</md-button>
+<!-- 					<h5>Continuar?</h5> -->
+<!-- 					<input type="checkbox" ng-change="setConformity()" -->
+<!-- 						ng-model="approved" bootstrap-switch data-on-text="Si!" -->
+<!-- 						data-off-text="No!" /> -->
 				</div>
 			</div>
 		</div>
