@@ -45,6 +45,8 @@
 			<img style="width: 450px;" ng-src="{{boardCtrl.welcomeText}}" />
 		</div>
 		<div ng-show="boardCtrl.status==1">
+			<md-button id="power-votar" class="md-fab md-primary"
+				aria-label="Use Android"> <i class="material-icons">power_settings_new</i></md-button>
 			<h4>Resultados</h4>
 			<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
 			<div class="list-group">
@@ -87,7 +89,8 @@
 		</div>
 		<div id="votation" ng-hide="boardCtrl.status==1">
 			<form name="votoForm" ng-submit="vote()">
-			<md-button id = "power-votar" class="md-fab md-primary" aria-label="Use Android"><i class="material-icons">power_settings_new</i></md-button>
+				<md-button id="power-votar" class="md-fab md-primary"
+					aria-label="Use Android"> <i class="material-icons">power_settings_new</i></md-button>
 				<div layout="row" layout-align="space-around center">
 					<md-input-container> <label>Voto</label> <input
 						name="value" min="0" step="any" required
@@ -96,7 +99,9 @@
 						<div ng-message="required">Necesito un valor!</div>
 					</div>
 					</md-input-container>
-					<md-switch id ="tamaño-dia-horas" class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="boardCtrl.fields.type" ng-true-value="1" ng-false-value="0">
+					<md-switch id="tamaño-dia-horas" class="md-primary" md-no-ink
+						aria-label="Switch No Ink" ng-model="boardCtrl.fields.type"
+						ng-true-value="1" ng-false-value="0">
 					{{boardCtrl.fields.type==0?'horas':'días'}} </md-switch>
 				</div>
 				<md-button class="votar-btn" type="submit">Votar</md-button>
