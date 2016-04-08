@@ -78,6 +78,7 @@ public class RoomSessionHandler {
 	private void sendToAllConnectedSessions(Room room, JsonObject message) {
 		for ( Usuario user : room.getUsers()) {
 			MessageHandler.sendToSession(user.getSession(), message);
+			System.out.println(user.getNombre()+" "+message);
 		}
 	}
 

@@ -6,6 +6,7 @@
 		$scope.welcomeText='img/poncho.png';
 		
 		ws.onmessage = function(response) {
+			console.log(response.data);
 			var data =JSON.parse(response.data)
 			var commando = data.comando;
 			if(commando == 3) {
