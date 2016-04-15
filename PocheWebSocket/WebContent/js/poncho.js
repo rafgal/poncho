@@ -2,7 +2,7 @@
 	
 	var poncho = angular.module('poncho', [ 'ngMaterial','ngMessages','d3', 'poncho_directives', 'poncho_filters' ]);
 	
-	poncho.controller("ponchoController", function($scope){
+	poncho.controller("ponchoController", function($scope, $mdDialog){
 		$scope.welcomeText='img/poncho.png';
 		
 		ws.onmessage = function(response) {
@@ -15,21 +15,47 @@
 				console.log("Se ha borrado la sala");
 			} else if(commando == 5) {
 				console.log("Se ha actualizado la sala");
-				$scope.changeToBoard();
+				$scope.changeToBoard(true);
 				$scope.$broadcast('updateBoard', data.board);
 			}else {
 				console.log("other command " + commando);
 			}
 		}
 		
-		$scope.changeToBoard = function(){
-			$("#login-view").hide();
-			$("#board-view").show();
+		$scope.logout = function(ev){
+			var confirm = $mdDialog.confirm()
+			.title('Salir de la sala')
+			.textContent('Si sale de la sala puede afectar la votación actual!!')
+			.ariaLabel('Lucky day')
+			.targetEvent(ev)
+			.ok('Quiero salir')
+			.cancel('Me arrepiento');
+			$mdDialog.show(confirm).then(function() {
+				$scope.changeToBoard(false);
+				$scope.changeToCreate(false);
+				ws.send('{"comando":6}');
+			});
 		};
 		
-		$scope.changeToCreate = function(){
-			$("#boards-view").hide();
-			$("#create-board-view").show();
+		$("#board-view").hide();
+		$scope.changeToBoard = function(change){
+			if(change){
+				$("#login-view").hide();
+				$("#board-view").show();
+			} else {
+				$("#login-view").show();
+				$("#board-view").hide();
+			}
+		};
+		
+		$scope.changeToCreate = function(change){
+			if(change) {
+				$("#boards-view").hide();
+				$("#create-board-view").show();
+			} else {
+				$("#boards-view").show();
+				$("#create-board-view").hide();
+			}
 		};
 	});
 	
@@ -68,27 +94,26 @@
 		
 		$scope.$on('updateBoard', function (event, data) {
 			$("#votation").show();
-		  boardCtrl.usersBoard = data.usuarios;
-		  boardCtrl.status = data.boardStatus;
-		  if (boardCtrl.status === 0) {
-			  boardCtrl.approved = false;
-		  } else {
-			  var sum = 0;
-			  for (var i = 0; i < boardCtrl.usersBoard.length; i++) {
-				  var factor = 1;
-				  if (boardCtrl.usersBoard[i].tipoVoto === 1) {
-					  factor = hoursPerDay;
-				  }
-				  sum += boardCtrl.usersBoard[i].voto * factor;
-			  }
-//			  boardCtrl.avg = sum / boardCtrl.usersBoard.length;
-			  boardCtrl.avg = Math.ceil(sum/boardCtrl.board.lenth/0.5)*0.5;
-			  boardCtrl.std=standardDeviation(boardCtrl.usersBoard);
-			  boardCtrl.usersBoard.sort(usersSortFunction);
-			  // hard-code data
-			  boardCtrl.data = boardCtrl.usersBoard;
-		  }
-		  $scope.$apply();
+			boardCtrl.usersBoard = data.usuarios;
+			boardCtrl.status = data.boardStatus;
+			if (boardCtrl.status === 0) {
+				boardCtrl.approved = false;
+			} else {
+				var sum = 0;
+				for (var i = 0; i < boardCtrl.usersBoard.length; i++) {
+					var factor = 1;
+					if (boardCtrl.usersBoard[i].tipoVoto === 1) {
+						factor = hoursPerDay;
+					}
+					sum += boardCtrl.usersBoard[i].voto * factor;
+				}
+//				boardCtrl.avg = sum / boardCtrl.usersBoard.length;
+				boardCtrl.avg = Math.ceil(sum/boardCtrl.board.lenth/0.5)*0.5;
+				boardCtrl.std=standardDeviation(boardCtrl.usersBoard);
+				boardCtrl.usersBoard.sort(usersSortFunction);
+				boardCtrl.data = boardCtrl.usersBoard;
+			}
+			$scope.$apply();
 		});
 		
 		boardCtrl.vote = function() {
@@ -96,7 +121,6 @@
 			boardCtrl.command.vote = {};
 			boardCtrl.command.vote.value = boardCtrl.fields.vote;
 			boardCtrl.command.vote.type = boardCtrl.fields.type;
-			console.log(JSON.stringify(boardCtrl.command));
 			ws.send(JSON.stringify(boardCtrl.command));
 		}
 	});

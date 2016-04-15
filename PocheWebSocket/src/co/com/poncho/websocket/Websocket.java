@@ -53,7 +53,7 @@ public class Websocket {
 			if(room == null){
 				room = new Room(roomName, user);
 				roomsHandler.addRoom(room);
-				sessionHandler.sendToAllConnectedSessions(roomsHandler.getMessageListRooms(Command.ROOMS));
+				sessionHandler.sendToAllConnectedSessionsWithoutUser(roomsHandler.getMessageListRooms(Command.ROOMS));
 			}
 			user.setRoom(room);
 			roomsHandler.addUserToRoom(room, user);
@@ -73,6 +73,13 @@ public class Websocket {
 			user = sessionHandler.getUserBySession(session);
 			roomsHandler.setConformity(user, approved);
 			break;
+		case LOGOUT:
+			System.out.println("salir de la sala");
+			user = sessionHandler.getUserBySession(session);
+			sessionHandler.removeUserSession(session);
+			roomsHandler.removeUserToRoom(user);
+			sessionHandler.sendToAllConnectedSessionsWithoutUser(roomsHandler.getMessageListRooms(Command.ROOMS));
+			break;	
 		default:
 			break;
 		}
