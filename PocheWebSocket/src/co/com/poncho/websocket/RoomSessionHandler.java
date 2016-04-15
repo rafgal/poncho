@@ -56,19 +56,22 @@ public class RoomSessionHandler {
 
 	private JsonObject getRoomStatus(Room room) {
 		JsonObject message = new JsonObject();
+		JsonObject board = new JsonObject();
 		message.addProperty("comando", Command.UPDATE_ROOM.getValue());
 		
-//		JsonArray jsonArray = new JsonArray();
-//		
-//		for (Usuario usu : room.getUsers()) {
-//			jsonArray.add(new JsonParser().parse(usu.getEstado()).getAsJsonObject());
-//		}
-//		int boardStatus=0;
-//		if(room.getUsersWithVote().size()==room.getUsers().size())
-//			boardStatus=1;
-//		
-//		message.addProperty("boardStatus", boardStatus);
-//		message.add("usuarios", jsonArray);
+		JsonArray jsonArray = new JsonArray();
+		JsonObject user = new JsonObject();
+		for (Usuario usu : room.getUsers()) {
+			user = new JsonObject();
+			user.addProperty("nombre", usu.getNombre());
+			user.addProperty("voto", usu.getVoto());
+			jsonArray.add(user);
+		}
+		int boardStatus= (room.getUsersWithVote().size()==room.getUsers().size()) ? 1 : 0;
+		
+		board.addProperty("boardStatus", boardStatus);
+		board.add("usuarios", jsonArray);
+		message.add("board", board);
 		return message;
 	}
 
@@ -87,6 +90,27 @@ public class RoomSessionHandler {
 		message.addProperty("comando", command.getValue());
 		message.add("salas", jsonArray);
 		return message;
+	}
+	
+	public void registerVote(float voto, int tipoVoto, Usuario usuario) {
+		usuario.setVoto(voto);
+		usuario.setTipoVoto(tipoVoto);
+		Room room = usuario.getRoom();
+		room.addVote(usuario);
+		JsonObject voteMessage = getRoomStatus(room);
+		sendToAllConnectedSessions(room, voteMessage);
+	}
+	
+	public void setConformity(Usuario usuario, boolean approved) {
+		Room room = usuario.getRoom();
+		usuario.setAceptado(approved);
+		
+		if (room.getUserAccpted() >= room.getUsers().size()) {
+			room.resetRoom();
+		}
+		
+		JsonObject voteMessage = getRoomStatus(room);
+		sendToAllConnectedSessions(room, voteMessage);
 	}
 
 }
