@@ -26,6 +26,7 @@ public class UserSessionHandler {
 	private Map<Session, Usuario> sesionesUsuarios = new HashMap<Session, Usuario>();
 	private Map<String, Session> sessionsId=new TreeMap<String, Session>();
 
+
 	public void addSession(Session session) {
 		sesionesUsuarios.put(session, null);
 		MessageHandler.sendToSession(session, roomsHandler.getMessageListRooms(Command.ROOMS));
@@ -51,13 +52,21 @@ public class UserSessionHandler {
 		sessionsId.put(session.getId(), session);
 	}
 	
-	public void recoverUser(String oldSessionId, Session newSession){
-//		Session oldSession = sessionsId.get(oldSessionId);
-//		Usuario usuario = sesionesUsuarios.remove(oldSession);
-//		sessions.remove(oldSession);
-//		sessions.add(newSession);
-//		cookieSessionMap.put(cookieSession, newSession);
-//		sesionesUsuarios.put(newSession, usuario);
+	public void recoverUser(String oldSessionId, Session newSession) throws SessionNotFoundException{
+		Session oldSession = sessionsId.get(oldSessionId);
+		if(oldSession==null){
+			throw new SessionNotFoundException();
+		}
+		System.out.println("recupera sesion");
+		Usuario usuario = sesionesUsuarios.remove(oldSession);
+		usuario.setSession(newSession);
+		System.out.println("usuario "+usuario.getNombre());
+		sessionsId.remove(oldSession.getId());
+		sessionsId.put(newSession.getId(),newSession);
+		sesionesUsuarios.put(newSession, usuario);
+		roomsHandler.sendToAllConnectedSessions(usuario.getRoom(), roomsHandler.getRoomStatus(usuario.getRoom()));
+		roomsHandler.sendSessionIdToUser(usuario);
+
 	}
 
 //	public void registerVote(float voto, int tipoVoto, Session session) {

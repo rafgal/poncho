@@ -17,7 +17,10 @@
 				console.log("Se ha actualizado la sala");
 				$scope.changeToBoard();
 				$scope.$broadcast('updateBoard', data.board);
-			}else {
+			}else if (commando == 7) {
+				localStorage.setItem(PONCHO_SESSION_ID_KEY,
+						data.ponchoSessionId);
+			} else {
 				console.log("other command " + commando);
 			}
 		}
