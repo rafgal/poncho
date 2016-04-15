@@ -3,6 +3,8 @@ package co.com.poncho.websocket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -17,6 +19,7 @@ import co.com.poncho.util.Command;
 public class RoomSessionHandler {
 	
 	private Map<String, Room> rooms = new HashMap<String, Room>();
+	Timer timer;
 	
 	public void addRoom(Room room){
 		rooms.put(room.getName(), room);
@@ -100,9 +103,42 @@ public class RoomSessionHandler {
 		usuario.setTipoVoto(tipoVoto);
 		Room room = usuario.getRoom();
 		room.addVote(usuario);
+		
+		Set<Usuario> usersWithVote = room.getUsersWithVote();
+		System.out.println("Votos actuales: " + usersWithVote.size());
+		
+		if (usersWithVote.size() == 1) {
+			startTimer(room);
+		}
+		
 		JsonObject voteMessage = getRoomStatus(room);
 		sendToAllConnectedSessions(room, voteMessage);
 	}
+	
+	private void startTimer(Room room) {
+		timer = new Timer();
+        timer.schedule(new TimeoutTask(room), 10*1000);
+	}
+	
+	class TimeoutTask extends TimerTask {
+		
+		private Room room;
+		
+		public TimeoutTask(Room _room) {
+			room = _room;
+		}
+		
+        public void run() {
+            System.out.println("Time's up!");
+            
+            JsonObject voteMessage = getRoomStatus(room);
+            System.out.println("Estado de la sala: " + voteMessage.getAsJsonObject("board").toString());
+            voteMessage.getAsJsonObject("board").addProperty("boardStatus", 1);
+            sendToAllConnectedSessions(room, voteMessage);
+            
+            timer.cancel();
+        }
+    }
 	
 	public void setConformity(Usuario usuario, boolean approved) {
 		Room room = usuario.getRoom();
