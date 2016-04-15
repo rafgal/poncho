@@ -55,7 +55,7 @@
 						<section layout="row" layout-sm="column"
 							layout-align="center center" layout-wrap>
 							<md-button id="pnch_create" class="btn btn-default"
-								ng-click="changeToCreate()">Crear sala</md-button>
+							ng-click="changeToCreate(true)">Crear sala</md-button>
 						</section>
 					</div>
 				</div>
@@ -91,9 +91,10 @@
 		<div id="board-view" ng-controller="BoardController as boardCtrl">
 
 			<div layout="column">
+				<md-button id="power-votar" class="md-fab md-primary" aria-label="Use Android" ng-click="logout($event)"> 
+					<i class="material-icons">power_settings_new</i>
+				</md-button>
 				<div ng-show="status==1">
-					<md-button id="power-votar" class="md-fab md-primary"
-						aria-label="Use Android"> <i class="material-icons">power_settings_new</i></md-button>
 					<h4>Resultados</h4>
 					<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
 					<div class="list-group">
@@ -118,7 +119,6 @@
 
 				<div id="votation" ng-hide="status!=0">
 					<form name="votoForm" ng-submit="vote()">
-						<md-button id="power-votar" class="md-fab md-primary" aria-label="Use Android"> <i class="material-icons">power_settings_new</i></md-button>
 						<div layout="row" layout-align="space-around center">
 							<md-input-container> <label>Voto</label> 
 								<input name="value" min="0" step="any" required	ng-model="fields.vote" type="number">
