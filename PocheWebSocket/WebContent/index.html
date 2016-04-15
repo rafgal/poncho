@@ -35,24 +35,25 @@
 				<div class="form-group has-feedback" layout="column" layout-align="center stretch">
 					<md-input-container class="md-block" flex-gt-sm> 
 						<label>Nombre</label>
-						<input type="text" name="name" required md-no-asterisk ng-model="person" />
+						<input type="text" name="name" required ng-model="person" />
+						<div ng-messages="userForm.lastName.$error">
+      					<div ng-message="required">This is required!</div>
+    					</div>
 						<div ng-messages="loginForm.name.$error">
 							<div ng-message="required">This is required.</div>
 						</div>
 					</md-input-container>
-					<div id="list-boards" >
-						<md-list >
-							<md-list-item ng-repeat="board in boards">
-								<md-input-container>
-									<input type="hidden" ng-value="board"  aria-label="{{ board }}">
-									<md-button ng-click="register(person, board)" >{{board}}</md-button>
-								</md-input-container>
+					<div id="list-boards">
+						<md-list ng-cloak>
+							<md-list-item ng-repeat="board in boards" ng-click="register(person, board)">
+   							   	<span>{{board}}</span>
 							</md-list-item>
 						</md-list>
 						<div layout="row" layout-align="end start">
 							<md-button id="pnch_create" class="btn btn-default" ng-click="changeToCreate()">Crear sala</md-button>
 						</div>
 					</div>
+					
 					<div id="create-board" layout="column" style="display:none;">
 						<md-input-container class="md-block" flex-gt-sm> 
 							<label>Nombre Sala</label>
@@ -61,7 +62,14 @@
 								<div ng-message="required">This is required.</div>
 							</div>
 						</md-input-container>
-						<md-button class="btn btn-default" ng-click="register(person, board)">Entrar</md-button>
+						<div layout-align="end start">
+						<md-content>
+    						<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+								<md-button id="pnch_comeback" class="btn btn-default" ng-click="changeToPrincipal()">Volver</md-button>
+								<md-button class="btn btn-default" ng-click="register(person, board)">Entrar</md-button>
+							</section>
+						</div>
+						
 					</div>
 				</div>
 			</div>

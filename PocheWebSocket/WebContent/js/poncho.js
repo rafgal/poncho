@@ -24,18 +24,20 @@
 			$("#list-boards").hide();
 			$("#create-board").show();
 		};
+		
+		$scope.changeToPrincipal = function(board){
+			$("#list-boards").show();
+			$("#create-board").hide();
+		};
 	});
 	
 	poncho.controller("loginController", function($scope, $http) {
 		
 		$scope.register = function(person, boardCurrent) {
 			console.log("person " + person + " board " + boardCurrent)
-			if (person != "") {
+			if (person.trim() != "") {
 				ws.send('{"comando":0,"nombre":"' + person + '", "room":"' + boardCurrent + '"}');
-			}else{
-				
 			}
-			
 		};
 	});
 
@@ -108,5 +110,6 @@
 		    );
 		  };
 	});
+	
 	
 })();
