@@ -1,17 +1,13 @@
 package co.com.poncho.websocket;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import co.com.poncho.model.Room;
 import co.com.poncho.model.Usuario;
@@ -45,11 +41,13 @@ public class RoomSessionHandler {
 		sendToAllConnectedSessions(room, addMessage);
 	}
 	
-	public void removeUserToRoom(Room room, Usuario user){
+	public void removeUserToRoom(Usuario user){
+		Room room = user.getRoom();
 		if(rooms.containsKey(room.getName())){
 			user.setRoom(null);
 			room.removeUser(user);
-		} 
+		}
+		sendToAllConnectedSessions(room, getRoomStatus(room));
 	}
 	
 	public Set<String> getAllRooms() {
@@ -71,6 +69,7 @@ public class RoomSessionHandler {
 			user = new JsonObject();
 			user.addProperty("nombre", usu.getNombre());
 			user.addProperty("voto", usu.getVoto());
+			user.addProperty("tipoVoto", usu.getTipoVoto());
 			jsonArray.add(user);
 		}
 		int boardStatus= (room.getUsersWithVote().size()==room.getUsers().size()) ? 1 : 0;
@@ -96,6 +95,27 @@ public class RoomSessionHandler {
 		message.addProperty("comando", command.getValue());
 		message.add("salas", jsonArray);
 		return message;
+	}
+	
+	public void registerVote(float voto, int tipoVoto, Usuario usuario) {
+		usuario.setVoto(voto);
+		usuario.setTipoVoto(tipoVoto);
+		Room room = usuario.getRoom();
+		room.addVote(usuario);
+		JsonObject voteMessage = getRoomStatus(room);
+		sendToAllConnectedSessions(room, voteMessage);
+	}
+	
+	public void setConformity(Usuario usuario, boolean approved) {
+		Room room = usuario.getRoom();
+		usuario.setAceptado(approved);
+		
+		if (room.getUserAccpted() >= room.getUsers().size()) {
+			room.resetRoom();
+		}
+		
+		JsonObject voteMessage = getRoomStatus(room);
+		sendToAllConnectedSessions(room, voteMessage);
 	}
 
 	protected void sendSessionIdToUser(Usuario user){

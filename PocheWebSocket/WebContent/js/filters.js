@@ -30,7 +30,7 @@ poncho.filter('ordinal', function() {
 	}
 });
 
-poncho.filter('avg', function() {
+poncho.filter('avgFormat', function() {
 	return function(value) {
 		if (value < hoursPerDay) {
 			return value + ' horas';

@@ -2,7 +2,7 @@
 	
 	var poncho = angular.module('poncho', [ 'ngMaterial','ngMessages','d3', 'poncho_directives', 'poncho_filters' ]);
 	
-	poncho.controller("ponchoController", function($scope){
+	poncho.controller("ponchoController", function($scope, $mdDialog){
 		$scope.welcomeText='img/poncho.png';
 		
 		ws.onmessage = function(response) {
@@ -15,7 +15,7 @@
 				console.log("Se ha borrado la sala");
 			} else if(commando == 5) {
 				console.log("Se ha actualizado la sala");
-				$scope.changeToBoard();
+				$scope.changeToBoard(true);
 				$scope.$broadcast('updateBoard', data.board);
 			}else if (commando == 7) {
 				localStorage.setItem(PONCHO_SESSION_ID_KEY,
@@ -25,14 +25,40 @@
 			}
 		}
 		
-		$scope.changeToBoard = function(){
-			$("#login-view").hide();
-			$("#board-view").show();
+		$scope.logout = function(ev){
+			var confirm = $mdDialog.confirm()
+			.title('Salir de la sala')
+			.textContent('Si sale de la sala puede afectar la votación actual!!')
+			.ariaLabel('Lucky day')
+			.targetEvent(ev)
+			.ok('Quiero salir')
+			.cancel('Me arrepiento');
+			$mdDialog.show(confirm).then(function() {
+				$scope.changeToBoard(false);
+				$scope.changeToCreate(false);
+				ws.send('{"comando":6}');
+			});
 		};
 		
-		$scope.changeToCreate = function(){
-			$("#boards-view").hide();
-			$("#create-board-view").show();
+		$("#board-view").hide();
+		$scope.changeToBoard = function(change){
+			if(change){
+				$("#login-view").hide();
+				$("#board-view").show();
+			} else {
+				$("#login-view").show();
+				$("#board-view").hide();
+			}
+		};
+		
+		$scope.changeToCreate = function(change){
+			if(change) {
+				$("#boards-view").hide();
+				$("#create-board-view").show();
+			} else {
+				$("#boards-view").show();
+				$("#create-board-view").hide();
+			}
 		};
 	});
 	
@@ -57,7 +83,7 @@
 			comando : 1
 		};
 		boardCtrl.usersBoard = [];
-		boardCtrl.status = 0;
+		boardCtrl.status = -1;
 		boardCtrl.approved = false;
 		
 		boardCtrl.setConformity = function() {
@@ -70,59 +96,36 @@
 		};
 		
 		$scope.$on('updateBoard', function (event, data) {
-		  boardCtrl.usersBoard = data.usuarios;
-		  boardCtrl.status = data.boardStatus;
-		  if (boardCtrl.status === 0) {
-			  boardCtrl.approved = false;
-		  } else {
-			  var sum = 0;
-			  for (var i = 0; i < boardCtrl.board.length; i++) {
-				  var factor = 1;
-				  if (boardCtrl.board[i].tipoVoto === 1) {
-					  factor = hoursPerDay;
-				  }
-				  sum += boardCtrl.board[i].voto * factor;
-			  }
-			  boardCtrl.avg = sum / boardCtrl.board.length;
-			  boardCtrl.std=standardDeviation(boardCtrl.board);
-			  boardCtrl.board.sort(usersSortFunction);
-			  // hard-code data
-			  boardCtrl.data = boardCtrl.board;
-		  }
-		  $scope.$apply();
+			$("#votation").show();
+			boardCtrl.usersBoard = data.usuarios;
+			boardCtrl.status = data.boardStatus;
+			if (boardCtrl.status === 0) {
+				boardCtrl.approved = false;
+			} else {
+				var sum = 0;
+				for (var i = 0; i < boardCtrl.usersBoard.length; i++) {
+					var factor = 1;
+					if (boardCtrl.usersBoard[i].tipoVoto === 1) {
+						factor = hoursPerDay;
+					}
+					sum += boardCtrl.usersBoard[i].voto * factor;
+				}
+//				boardCtrl.avg = sum / boardCtrl.usersBoard.length;
+				boardCtrl.avg = Math.ceil(sum/boardCtrl.usersBoard.length/0.5)*0.5;
+				console.log("promerip0odsi "+boardCtrl.avg);
+				boardCtrl.std=standardDeviation(boardCtrl.usersBoard);
+				boardCtrl.usersBoard.sort(usersSortFunction);
+				boardCtrl.data = boardCtrl.usersBoard;
+			}
+			$scope.$apply();
 		});
-		
-//		boardCtrl.updateBoard = function(data) {
-//			boardCtrl.board = data.usuarios;
-//			boardCtrl.welcomeText='img/poncho2.png'; //revisar
-//			boardCtrl.status = data.boardStatus;
-//			if (boardCtrl.status === 0) {
-//				boardCtrl.approved = false;
-//			} else {
-//				var sum = 0;
-//				for (var i = 0; i < boardCtrl.board.length; i++) {
-//					var factor = 1;
-//					if (boardCtrl.board[i].tipoVoto === 1) {
-//						factor = hoursPerDay;
-//					}
-//					sum += boardCtrl.board[i].voto * factor;
-//				}
-//				boardCtrl.avg = sum / boardCtrl.board.length;
-//				boardCtrl.std=standardDeviation(boardCtrl.board);
-//				boardCtrl.board.sort(usersSortFunction);
-//				// hard-code data
-//				boardCtrl.data = boardCtrl.board;
-//			}
-//			boardCtrl.$apply();
-//		};
 		
 		boardCtrl.vote = function() {
 			boardCtrl.command.comando = 1;
 			boardCtrl.command.vote = {};
 			boardCtrl.command.vote.value = boardCtrl.fields.vote;
 			boardCtrl.command.vote.type = boardCtrl.fields.type;
-			console.log(JSON.stringify(boardCtrl.command));
-			//ws.send(JSON.stringify(boardCtrl.command));
+			ws.send(JSON.stringify(boardCtrl.command));
 		}
 	});
 	
