@@ -50,34 +50,41 @@
 					<md-input-container> <input type="hidden"
 						ng-value="board" aria-label="{{ board }}"> <md-button
 						ng-click="register(person, board)">{{board}}</md-button> </md-input-container> </md-list-item> </md-list>
-					<div layout="row" layout-align="end start">
-						<md-button id="pnch_create" class="btn btn-default"
-							ng-click="changeToCreate()">Crear sala</md-button>
+					<div layout-align="end start">
+						<md-content>
+						<section layout="row" layout-sm="column"
+							layout-align="center center" layout-wrap>
+							<md-button id="pnch_create" class="btn btn-default"
+								ng-click="changeToCreate()">Crear sala</md-button>
+						</section>
 					</div>
 				</div>
-					
-					<div id="create-board-view" layout="column" style="display: none;">
+
+				<div id="create-board-view" layout="column" style="display: none;">
 					<md-input-container class="md-block" flex-gt-sm>
 					<label>Nombre Sala</label> <input type="text" name="board" required
 						md-no-asterisk ng-model="board" />
 					<div ng-messages="loginForm.name.$error">
 						<div ng-message="required">This is required.</div>
-							</div>
-						</md-input-container>
-						<div layout-align="end start">
-						<md-content>
-    						<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-								<md-button id="pnch_comeback" class="btn btn-default" ng-click="changeToPrincipal()">Volver</md-button>
-								<md-button class="btn btn-default" ng-click="register(person, board)">Entrar</md-button>
-							</section>
-						</div>
-						
 					</div>
 					</md-input-container>
-					<md-button class="btn btn-default"
-						ng-click="register(person, board)">Entrar</md-button>
+					<div layout-align="end start">
+						<md-content>
+						<section layout="row" layout-sm="column"
+							layout-align="center center" layout-wrap>
+							<md-button id="pnch_comeback" class="btn btn-default"
+								ng-click="changeToPrincipal()">Volver</md-button>
+							<md-button class="btn btn-default"
+								ng-click="register(person, board)">Entrar</md-button>
+						</section>
+					</div>
+					<div id="ino">
+						<label id="ito" type="hidden" >Por favor complete los campos</label>
+					</div>
 				</div>
+				</md-input-container>
 			</div>
+		</div>
 		</div>
 
 		<!--// Board Controller -->

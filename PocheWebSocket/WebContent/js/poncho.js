@@ -4,7 +4,7 @@
 	
 	poncho.controller("ponchoController", function($scope){
 		$scope.welcomeText='img/poncho.png';
-		
+		$("#ino").hide();
 		ws.onmessage = function(response) {
 			var data =JSON.parse(response.data)
 			var commando = data.comando;
@@ -33,17 +33,21 @@
 		};
 		
 		$scope.changeToPrincipal = function(board){
-			$("#list-boards").show();
-			$("#create-board").hide();
+			$("#boards-view").show();
+			$("#create-board-view").hide();
+			$("#ino").hide();
 		};
 	});
 	
+	
 	poncho.controller("loginController", function($scope, $http) {
 		
-		$scope.register = function(person, boardCurrent) {
-			console.log("person " + person + " board " + boardCurrent)
-			if (person.trim() != "") {
-				ws.send('{"comando":0,"nombre":"' + person + '", "room":"' + boardCurrent + '"}');
+		$scope.register = function(person, board) {
+			if ( person != undefined && board != undefined) {
+				$("#ino").hide();
+				ws.send('{"comando":0,"nombre":"' + person + '", "room":"' + board + '"}');
+			}else{
+				$("#ino").show();
 			}
 		};
 	});
