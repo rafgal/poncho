@@ -4,7 +4,7 @@
 	
 	poncho.controller("ponchoController", function($scope, $mdDialog){
 		$scope.welcomeText='img/poncho.png';
-		
+		$("#ino").hide();
 		ws.onmessage = function(response) {
 			var data =JSON.parse(response.data)
 			var commando = data.comando;
@@ -60,14 +60,23 @@
 				$("#create-board-view").hide();
 			}
 		};
+		
+		$scope.changeToPrincipal = function(board){
+			$("#boards-view").show();
+			$("#create-board-view").hide();
+			$("#ino").hide();
+		};
 	});
+	
 	
 	poncho.controller("loginController", function($scope, $http) {
 		
-		$scope.register = function(person, boardCurrent) {
-			console.log("person " + person + " board " + boardCurrent)
-			if (person != "") {
-				ws.send('{"comando":0,"nombre":"' + person + '", "room":"' + boardCurrent + '"}');
+		$scope.register = function(person, board) {
+			if ( person != undefined && board != undefined) {
+				$("#ino").hide();
+				ws.send('{"comando":0,"nombre":"' + person + '", "room":"' + board + '"}');
+			}else{
+				$("#ino").show();
 			}
 		};
 	});
@@ -141,5 +150,6 @@
 		    );
 		  };
 	});
+	
 	
 })();
