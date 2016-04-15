@@ -117,7 +117,7 @@
 					sum += boardCtrl.usersBoard[i].voto * factor;
 				}
 //				boardCtrl.avg = sum / boardCtrl.usersBoard.length;
-				boardCtrl.avg = Math.ceil(sum/boardCtrl.board.lenth/0.5)*0.5;
+				boardCtrl.avg = Math.ceil(sum/boardCtrl.usersBoard.lenth/0.5)*0.5;
 				boardCtrl.std=standardDeviation(boardCtrl.usersBoard);
 				boardCtrl.usersBoard.sort(usersSortFunction);
 				boardCtrl.data = boardCtrl.usersBoard;

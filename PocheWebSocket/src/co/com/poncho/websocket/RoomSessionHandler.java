@@ -46,6 +46,8 @@ public class RoomSessionHandler {
 			room.removeUser(user);
 		}
 		sendToAllConnectedSessions(room, getRoomStatus(room));
+		if(room.getUsers().size() == 0)
+			rooms.remove(room.getName());
 	}
 	
 	public Set<String> getAllRooms() {

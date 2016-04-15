@@ -5,14 +5,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ejb.SessionSynchronization;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.Session;
 
 import com.google.gson.JsonObject;
 
-import co.com.poncho.model.Room;
 import co.com.poncho.model.Usuario;
 import co.com.poncho.util.Command;
 
