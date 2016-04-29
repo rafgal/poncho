@@ -29,7 +29,7 @@
 
 </head>
 <body ng-controller="ponchoController as ponchoCtrl" ngCloak>
-	<div layout="column" layout-align="center center stretch">
+	<div layout="column" layout-align="center center">
 		<div class="page-header">
 			<img style="width: 50%;" ng-src="{{welcomeText}}" />
 		</div>
@@ -85,11 +85,8 @@
 				</md-input-container>
 			</div>
 		</div>
-		</div>
-
 		<!--// Board Controller -->
 		<div id="board-view" ng-controller="BoardController as boardCtrl">
-
 			<div layout="column">
 				<md-button id="power-votar" class="md-fab md-primary" aria-label="Use Android" ng-click="logout($event)"> 
 					<i class="material-icons">power_settings_new</i>
@@ -98,10 +95,13 @@
 					<h3>Resultados</h3>
 					<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
 					<div class="list-group">
-						<h4 class="list-group-item-heading">Promedio:</h4>
-						<p class="list-group-item-text">{{avg | avg}}</p>
-						<h4 class="list-group-item-heading">Desviación estandar:</h4>
-						<p class="list-group-item-text">{{std.toFixed(2)}}</p>
+						<div class="list-group-item">
+							<h4 class="list-group-item-heading">Promedio:</h4>
+							<p class="list-group-item-text">{{avg | avgFormat}}</p>
+						</div> <div class="list-group-item">
+							<h4 class="list-group-item-heading">Desviación estandar:</h4>
+							<p class="list-group-item-text">{{std.toFixed(2)}}</p>
+						</div>
 					</div>
 				</div>
 
@@ -133,13 +133,10 @@
 
 				<div id="aprove_vote" ng-show="status==1">
 					<md-button class="btn btn-default" ng-click="resetRoom()">Volver a votar</md-button>
-<!-- 					<h5>Continuar?</h5> -->
-<!-- 					<input type="checkbox" ng-change="setConformity()" -->
-<!-- 						ng-model="approved" bootstrap-switch data-on-text="Si!" -->
-<!-- 						data-off-text="No!" /> -->
 				</div>
 			</div>
 		</div>
+	  </div>
 	</div>
 </body>
 </html>

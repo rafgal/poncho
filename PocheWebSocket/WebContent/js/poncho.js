@@ -18,7 +18,10 @@
 				console.log("Se ha actualizado la sala");
 				$scope.changeToBoard(true);
 				$scope.$broadcast('updateBoard', data.board);
-			}else {
+			}else if (commando == 7) {
+				localStorage.setItem(PONCHO_SESSION_ID_KEY,
+						data.ponchoSessionId);
+			} else {
 				console.log("other command " + commando);
 			}
 		}
@@ -103,7 +106,7 @@
 //		};
 		
 		boardCtrl.resetRoom = function() {
-			boardCtrl.command.comando = 6;
+			boardCtrl.command.comando = 8;
 			delete boardCtrl.command.vote;
 			ws.send(JSON.stringify(boardCtrl.command));
 			boardCtrl.fields.vote = null;
@@ -129,7 +132,7 @@
 					sum += boardCtrl.usersBoard[i].voto * factor;
 				}
 //				boardCtrl.avg = sum / boardCtrl.usersBoard.length;
-				boardCtrl.avg = Math.ceil(sum/boardCtrl.usersBoard.lenth/0.5)*0.5;
+				boardCtrl.avg = Math.ceil(sum/boardCtrl.usersBoard.length/0.5)*0.5;
 				boardCtrl.std=standardDeviation(boardCtrl.usersBoard);
 				boardCtrl.usersBoard.sort(usersSortFunction);
 				boardCtrl.data = boardCtrl.usersBoard;
