@@ -7,6 +7,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -19,12 +20,12 @@ public class Websocket {
 
 	@OnClose
 	public void onConnectionClose(Session session) {
-		sessionHandler.removeSession(session);
+		//sessionHandler.removeSession(session);
 	}
 
 	@Inject
 	private UserSessionHandler sessionHandler;
-	
+
 	@Inject
 	private RoomSessionHandler roomsHandler;
 
@@ -39,11 +40,14 @@ public class Websocket {
 		JsonObject jsonMessage = parser.parse(message).getAsJsonObject();
 
 		int comando = jsonMessage.get("comando").getAsInt();
-		Command command=Command.fromInt(comando);
+		Command command = Command.fromInt(comando);
 		Usuario user = null;
 		switch (command) {
 		case REGISTER_USER:
 			System.out.println("Registrar usuario");
+			JsonElement ponchoSessionIdElement = jsonMessage.get("ponchoSessionId");
+			if (ponchoSessionIdElement == null) {
+				System.out.println("Registrar usuario");
 			String nombre = jsonMessage.get("nombre").getAsString();
 			String roomName = jsonMessage.get("room").getAsString();
 			Room room = roomsHandler.getRoomByName(roomName);
@@ -58,6 +62,17 @@ public class Websocket {
 			user.setRoom(room);
 			roomsHandler.addUserToRoom(room, user);
 			
+			} else {
+				try {
+					System.out.println("recover usuario");
+					String ponchoSessionId = ponchoSessionIdElement.getAsString();
+					System.out.println("session id found "+ponchoSessionId);
+					sessionHandler.recoverUser(ponchoSessionId, session);
+				} catch (SessionNotFoundException e) {
+					System.out.println("session not found exc");
+					MessageHandler.sendToSession(session, roomsHandler.getMessageListRooms(Command.ROOMS));
+				}
+			}
 			break;
 		case VOTE:
 			System.out.println("Registrar voto");

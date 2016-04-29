@@ -65,5 +65,7 @@ public class Usuario {
 	public Session getSession() {
 		return session;
 	}
-	
+	public void setSession(Session session) {
+		this.session = session;
+	}
 }

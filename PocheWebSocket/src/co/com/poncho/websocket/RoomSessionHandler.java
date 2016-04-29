@@ -36,6 +36,8 @@ public class RoomSessionHandler {
 		} 
 		room.addUser(user);
 		JsonObject addMessage = getRoomStatus(room);
+		System.out.println("add user to room pre send session id");
+		sendSessionIdToUser(user);
 		sendToAllConnectedSessions(room, addMessage);
 	}
 	
@@ -58,7 +60,7 @@ public class RoomSessionHandler {
 		return rooms.get(name);
 	}
 
-	private JsonObject getRoomStatus(Room room) {
+	public JsonObject getRoomStatus(Room room) {
 		JsonObject message = new JsonObject();
 		JsonObject board = new JsonObject();
 		message.addProperty("comando", Command.UPDATE_ROOM.getValue());
@@ -80,7 +82,7 @@ public class RoomSessionHandler {
 		return message;
 	}
 
-	private void sendToAllConnectedSessions(Room room, JsonObject message) {
+	public void sendToAllConnectedSessions(Room room, JsonObject message) {
 		for ( Usuario user : room.getUsers()) {
 			MessageHandler.sendToSession(user.getSession(), message);
 		}
@@ -118,4 +120,10 @@ public class RoomSessionHandler {
 		sendToAllConnectedSessions(room, voteMessage);
 	}
 
+	protected void sendSessionIdToUser(Usuario user){
+		JsonObject message = new JsonObject();
+		message.addProperty("comando", Command.SEND_SESSION_ID.getValue());
+		message.addProperty("ponchoSessionId",	user.getSession().getId());
+		MessageHandler.sendToSession(user.getSession(), message);
+	}
 }
