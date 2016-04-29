@@ -1,5 +1,6 @@
 //This file register into WebSocket for votation
 const PONCHO_SESSION_ID_KEY="ponchoSessionId";
+const TIMEOUT_VOTE_KEY = "timeoutVote";
 var hoursPerDay = 7;
 var ws = new WebSocket('ws://' + window.location.hostname + ':'
 		+ window.location.port + window.location.pathname + 'ponchito');
@@ -15,6 +16,7 @@ function closingCode() {
 	return null;
 }
 function checkPonchoSession() {
+	localStorage.setItem(TIMEOUT_VOTE_KEY, 0);
 	console.log("ck sssion")
 	if (localStorage.getItem(PONCHO_SESSION_ID_KEY) !== null) {
 		var message = {};

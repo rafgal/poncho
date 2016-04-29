@@ -15,12 +15,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.7/rx.all.js"></script>
+
 
 <!-- Angular Material Library -->
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
 
+<script type="text/javascript" src="resources/rx.angular.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/poncho.js"></script>
 <script type="text/javascript" src="js/directives.js"></script>
@@ -29,6 +32,7 @@
 
 </head>
 <body ng-controller="ponchoController as ponchoCtrl" ngCloak>
+
 	<div layout="column" layout-align="center center stretch">
 		<div class="page-header">
 			<img style="width: 50%;" ng-src="{{welcomeText}}" />
@@ -55,7 +59,7 @@
 						<section layout="row" layout-sm="column"
 							layout-align="center center" layout-wrap>
 							<md-button id="pnch_create" class="btn btn-default"
-							ng-click="changeToCreate(true)">Crear sala</md-button>
+								ng-click="changeToCreate(true)">Crear sala</md-button>
 						</section>
 					</div>
 				</div>
@@ -79,69 +83,74 @@
 						</section>
 					</div>
 					<div id="ino">
-						<label id="ito" type="hidden" >Por favor complete los campos</label>
+						<label id="ito" type="hidden">Por favor complete los
+							campos</label>
 					</div>
 				</div>
 				</md-input-container>
 			</div>
 		</div>
-		</div>
+	</div>
 
-		<!--// Board Controller -->
-		<div id="board-view" ng-controller="BoardController as boardCtrl">
+	<!--// Board Controller -->
+	<div id="board-view" ng-controller="BoardController as boardCtrl">
 
-			<div layout="column">
-				<md-button id="power-votar" class="md-fab md-primary" aria-label="Use Android" ng-click="logout($event)"> 
-					<i class="material-icons">power_settings_new</i>
-				</md-button>
-				<div ng-show="status==1">
-					<h4>Resultados</h4>
-					<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
-					<div class="list-group">
-						<a href="#" class="list-group-item">
-							<h4 class="list-group-item-heading">Promedio:</h4>
-							<p class="list-group-item-text">{{avg | avgFormat}}</p>
-						</a> <a href="#" class="list-group-item">
-							<h4 class="list-group-item-heading">Desviación estandar:</h4>
-							<p class="list-group-item-text">{{std.toFixed(2)}}</p>
-						</a>
-					</div>
-				</div>
-
-				<div id="board" ng-hide="status==1">
-					<div class="poncho-list-item" layout="row" ng-repeat="user in usersBoard" ng-class="{'ha-votado': user.voto>=0}">
-						<h4 flex="90">{{user.nombre}}</h4>
-						<md-icon flex="10" md-font-set="material-icons" ng-style="{color: user.voto<0?'Black':'White'}">{{user.voto<0?"hourglass_empty":"done"}}
-							<md-tooltip>{{user.voto<0?"Pensando":"Votó"}}</md-tooltip>
-						</md-icon>
-					</div>
-				</div>
-
-				<div id="votation" ng-hide="status!=0">
-					<form name="votoForm" ng-submit="vote()">
-						<div layout="row" layout-align="space-around center">
-							<md-input-container> <label>Voto</label> 
-								<input name="value" min="0" step="any" required	ng-model="fields.vote" type="number">
-								<div ng-messages="votoForm.value.$error">
-									<div ng-message="required">Necesito un valor!</div>
-								</div>
-							</md-input-container>
-							<md-switch id="tamaño-dia-horas" class="md-primary" md-no-ink aria-label="Switch No Ink" ng-model="fields.type" ng-true-value="1" ng-false-value="0">
-								{{fields.type==0?'horas':'días'}} 
-							</md-switch>
-						</div>
-						<md-button class="votar-btn" type="submit">Votar</md-button>
-					</form>
-				</div>
-
-				<div id="aprove_vote" ng-show="status==1">
-					<h5>Continuar?</h5>
-					<input type="checkbox" ng-change="setConformity()"
-						ng-model="approved" bootstrap-switch data-on-text="Si!"
-						data-off-text="No!" />
+		<div layout="column">
+			<md-button id="power-votar" class="md-fab md-primary"
+				aria-label="Use Android" ng-click="logout($event)"> <i
+				class="material-icons">power_settings_new</i> </md-button>
+			<div ng-show="status==1">
+				<h4>Resultados</h4>
+				<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
+				<div class="list-group">
+					<a href="#" class="list-group-item">
+						<h4 class="list-group-item-heading">Promedio:</h4>
+						<p class="list-group-item-text">{{avg | avgFormat}}</p>
+					</a> <a href="#" class="list-group-item">
+						<h4 class="list-group-item-heading">Desviación estandar:</h4>
+						<p class="list-group-item-text">{{std.toFixed(2)}}</p>
+					</a>
 				</div>
 			</div>
+
+			<div id="board" ng-hide="status==1">
+				<div class="poncho-list-item" layout="row"
+					ng-repeat="user in usersBoard"
+					ng-class="{'ha-votado': user.voto>=0}">
+					<h4 flex="90">{{user.nombre}}</h4>
+					<md-icon flex="10" md-font-set="material-icons"
+						ng-style="{color: user.voto<0?'Black':'White'}">{{user.voto<0?"hourglass_empty":"done"}}
+					<md-tooltip>{{user.voto<0?"Pensando":"Votó"}}</md-tooltip> </md-icon>
+				</div>
+			</div>
+
+			<div id="votation" ng-hide="status!=0">
+				<form name="votoForm" ng-submit="vote()">
+					<div layout="row" layout-align="space-around center">
+						<md-input-container> <label>Voto</label> <input
+							name="value" min="0" step="any" required ng-model="fields.vote"
+							type="number">
+						<div ng-messages="votoForm.value.$error">
+							<div ng-message="required">Necesito un valor!</div>
+						</div>
+						</md-input-container>
+						<md-switch id="tamaño-dia-horas" class="md-primary" md-no-ink
+							aria-label="Switch No Ink" ng-model="fields.type"
+							ng-true-value="1" ng-false-value="0">
+						{{fields.type==0?'horas':'días'}} </md-switch>
+					</div>
+					<md-button class="votar-btn" type="submit">Votar</md-button>
+				</form>
+			</div>
+
+			<div id="aprove_vote" ng-show="status==1">
+				<h5>Continuar?</h5>
+				<input type="checkbox" ng-change="setConformity()"
+					ng-model="approved" bootstrap-switch data-on-text="Si!"
+					data-off-text="No!" />
+			</div>
 		</div>
+	</div>
 	</div>
 </body>
 </html>

@@ -105,11 +105,26 @@
 		};
 		
 		$scope.$on('updateBoard', function (event, data) {
+			
 			$("#votation").show();
 			boardCtrl.usersBoard = data.usuarios;
 			boardCtrl.status = data.boardStatus;
+			var subscription;
 			if (boardCtrl.status === 0) {
 				boardCtrl.approved = false;
+				if (localStorage.getItem(TIMEOUT_VOTE_KEY) !== null && localStorage.getItem(TIMEOUT_VOTE_KEY) == 0) {
+					localStorage.setItem(TIMEOUT_VOTE_KEY, new Date().getTime());
+					subscription = source.subscribe(
+						    function (x) {
+						        boardCtrl.fields.vote = 0;
+						    },
+						    function (err) {
+						        console.log('Error: ' + err);
+						    },
+						    function () {
+						        boardCtrl.vote();
+						    });
+				}
 			} else {
 				var sum = 0;
 				for (var i = 0; i < boardCtrl.usersBoard.length; i++) {
@@ -119,7 +134,6 @@
 					}
 					sum += boardCtrl.usersBoard[i].voto * factor;
 				}
-//				boardCtrl.avg = sum / boardCtrl.usersBoard.length;
 				boardCtrl.avg = Math.ceil(sum/boardCtrl.usersBoard.length/0.5)*0.5;
 				boardCtrl.std=standardDeviation(boardCtrl.usersBoard);
 				boardCtrl.usersBoard.sort(usersSortFunction);
@@ -129,12 +143,17 @@
 		});
 		
 		boardCtrl.vote = function() {
-			boardCtrl.command.comando = 1;
+			localStorage.setItem(TIMEOUT_VOTE_KEY, 0);
 			boardCtrl.command.vote = {};
 			boardCtrl.command.vote.value = boardCtrl.fields.vote;
 			boardCtrl.command.vote.type = boardCtrl.fields.type;
 			ws.send(JSON.stringify(boardCtrl.command));
 		}
+		
+		var source = Rx.Observable.timer(20000)
+	    	.timeInterval()
+	    	.pluck('interval')
+	    	.take(1);
 	});
 	
 	poncho.controller('ListCtrl', function($mdDialog) {
