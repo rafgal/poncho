@@ -50,11 +50,16 @@
 					<md-input-container> <input type="hidden"
 						ng-value="board" aria-label="{{ board }}"> <md-button
 						ng-click="register(person, board)">{{board}}</md-button> </md-input-container> </md-list-item> </md-list>
-					<div layout="row" layout-align="end start">
-						<md-button id="pnch_create" class="btn btn-default"
-							ng-click="changeToCreate()">Crear sala</md-button>
+					<div layout-align="end start">
+						<md-content>
+						<section layout="row" layout-sm="column"
+							layout-align="center center" layout-wrap>
+							<md-button id="pnch_create" class="btn btn-default"
+							ng-click="changeToCreate(true)">Crear sala</md-button>
+						</section>
 					</div>
 				</div>
+
 				<div id="create-board-view" layout="column" style="display: none;">
 					<md-input-container class="md-block" flex-gt-sm>
 					<label>Nombre Sala</label> <input type="text" name="board" required
@@ -63,19 +68,33 @@
 						<div ng-message="required">This is required.</div>
 					</div>
 					</md-input-container>
-					<md-button class="btn btn-default"
-						ng-click="register(person, board)">Entrar</md-button>
+					<div layout-align="end start">
+						<md-content>
+						<section layout="row" layout-sm="column"
+							layout-align="center center" layout-wrap>
+							<md-button id="pnch_comeback" class="btn btn-default"
+								ng-click="changeToPrincipal()">Volver</md-button>
+							<md-button class="btn btn-default"
+								ng-click="register(person, board)">Entrar</md-button>
+						</section>
+					</div>
+					<div id="ino">
+						<label id="ito" type="hidden" >Por favor complete los campos</label>
+					</div>
 				</div>
+				</md-input-container>
 			</div>
+		</div>
 		</div>
 
 		<!--// Board Controller -->
 		<div id="board-view" ng-controller="BoardController as boardCtrl">
 
 			<div layout="column">
+				<md-button id="power-votar" class="md-fab md-primary" aria-label="Use Android" ng-click="logout($event)"> 
+					<i class="material-icons">power_settings_new</i>
+				</md-button>
 				<div ng-show="status==1">
-					<md-button id="power-votar" class="md-fab md-primary"
-						aria-label="Use Android"> <i class="material-icons">power_settings_new</i></md-button>
 					<h3>Resultados</h3>
 					<div d3-Bars data="data" label="name" on-click="d3OnClick(item)"></div>
 					<div class="list-group">
@@ -97,7 +116,6 @@
 
 				<div id="votation" ng-hide="status!=0">
 					<form name="votoForm" ng-submit="vote()">
-						<md-button id="power-votar" class="md-fab md-primary" aria-label="Use Android"> <i class="material-icons">power_settings_new</i></md-button>
 						<div layout="row" layout-align="space-around center">
 							<md-input-container> <label>Voto</label> 
 								<input name="value" min="0" step="any" required	ng-model="fields.vote" type="number">

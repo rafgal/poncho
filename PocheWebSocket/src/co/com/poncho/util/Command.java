@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Command {
-	COMMAND_UNKNOWN, REGISTER_USER(0),VOTE(1),EVAL_RESULTS(2),ROOMS(3), REMOVE_ROOM(4), UPDATE_ROOM(5), CLEAR_ROOM(6);
+	COMMAND_UNKNOWN, REGISTER_USER(0),VOTE(1),EVAL_RESULTS(2),ROOMS(3), REMOVE_ROOM(4), UPDATE_ROOM(5), LOGOUT(6), CLEAR_ROOM(7);
 	private Integer value = null;
 	private static final Map<Integer, Command> intToTypeMap = new HashMap<Integer, Command>();
 

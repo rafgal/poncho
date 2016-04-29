@@ -5,14 +5,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ejb.SessionSynchronization;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.Session;
 
 import com.google.gson.JsonObject;
 
-import co.com.poncho.model.Room;
 import co.com.poncho.model.Usuario;
 import co.com.poncho.util.Command;
 
@@ -31,20 +29,12 @@ public class UserSessionHandler {
 	}
 
 	public void removeSession(Session session) {
-		Usuario user = sesionesUsuarios.get(session);
 		sessions.remove(session);
+		removeUserSession(session);
+	}
+	
+	public void removeUserSession(Session session) {
 		sesionesUsuarios.remove(session);
-		
-		if(user != null && user.getRoom() != null){
-			Room room = user.getRoom();
-			if(user.equals(room.getOwner())){
-				roomsHandler.removeRoom(room);
-				sendToAllConnectedSessions(roomsHandler.getMessageListRooms(Command.ROOMS));
-				
-			} else {
-				roomsHandler.removeUserToRoom(room, user);
-			}
-		}
 	}
 
 	public void addUser(Usuario user, Session session) {
@@ -71,7 +61,7 @@ public class UserSessionHandler {
 //	}
 //
 
-	public void sendToAllConnectedSessions(JsonObject message) {
+	public void sendToAllConnectedSessionsWithoutUser(JsonObject message) {
 		Set<Session> sinUser = new HashSet<Session>();
 		sinUser.addAll(sessions);
 		sinUser.removeAll(sesionesUsuarios.keySet());

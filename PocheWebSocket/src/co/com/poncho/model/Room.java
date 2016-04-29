@@ -40,8 +40,10 @@ public class Room {
 	}
 
 	public void removeUser(Usuario user){
-		if(user != null)
+		if(user != null){
 			this.users.remove(user);
+			this.usersWithVote.remove(user);
+		}
 	}
 	
 	public Usuario getOwner() {

@@ -39,11 +39,15 @@ public class RoomSessionHandler {
 		sendToAllConnectedSessions(room, addMessage);
 	}
 	
-	public void removeUserToRoom(Room room, Usuario user){
+	public void removeUserToRoom(Usuario user){
+		Room room = user.getRoom();
 		if(rooms.containsKey(room.getName())){
 			user.setRoom(null);
 			room.removeUser(user);
-		} 
+		}
+		sendToAllConnectedSessions(room, getRoomStatus(room));
+		if(room.getUsers().size() == 0)
+			rooms.remove(room.getName());
 	}
 	
 	public Set<String> getAllRooms() {
@@ -65,6 +69,7 @@ public class RoomSessionHandler {
 			user = new JsonObject();
 			user.addProperty("nombre", usu.getNombre());
 			user.addProperty("voto", usu.getVoto());
+			user.addProperty("tipoVoto", usu.getTipoVoto());
 			jsonArray.add(user);
 		}
 		int boardStatus= (room.getUsersWithVote().size()==room.getUsers().size()) ? 1 : 0;
