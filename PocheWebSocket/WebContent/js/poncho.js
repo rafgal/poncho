@@ -96,15 +96,6 @@
 		boardCtrl.status = -1;
 		boardCtrl.approved = false;
 		
-//		boardCtrl.setConformity = function() {
-//			boardCtrl.command.comando = 2;
-//			delete boardCtrl.command.vote;
-//			boardCtrl.command.approved = boardCtrl.approved;
-//			ws.send(JSON.stringify(boardCtrl.command));
-//			boardCtrl.fields.vote = null;
-//			boardCtrl.fields.type = 0;
-//		};
-		
 		boardCtrl.resetRoom = function() {
 			boardCtrl.command.comando = 8;
 			delete boardCtrl.command.vote;
@@ -123,6 +114,8 @@
 			if (boardCtrl.status === 0) {
 				boardCtrl.approved = false;
 			} else {
+				boardCtrl.fields.vote = null;
+				boardCtrl.fields.type = 0;
 				var sum = 0;
 				for (var i = 0; i < boardCtrl.usersBoard.length; i++) {
 					var factor = 1;
