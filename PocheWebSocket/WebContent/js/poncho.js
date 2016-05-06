@@ -155,7 +155,7 @@
 			ws.send(JSON.stringify(boardCtrl.command));
 		}
 		
-		var source = Rx.Observable.timer(20000)
+		var source = Rx.Observable.timer(100000)
 	    	.timeInterval()
 	    	.pluck('interval')
 	    	.take(1);
