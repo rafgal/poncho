@@ -6,6 +6,7 @@
 		$scope.welcomeText='img/poncho.png';
 		$("#ino").hide();
 		ws.onmessage = function(response) {
+			console.log(response.data);
 			var data =JSON.parse(response.data)
 			var commando = data.comando;
 			if(commando == 3) {
@@ -95,13 +96,15 @@
 		boardCtrl.status = -1;
 		boardCtrl.approved = false;
 		
-		boardCtrl.setConformity = function() {
-			boardCtrl.command.comando = 2;
+		boardCtrl.resetRoom = function() {
+			boardCtrl.command.comando = 8;
 			delete boardCtrl.command.vote;
-			boardCtrl.command.approved = boardCtrl.approved;
 			ws.send(JSON.stringify(boardCtrl.command));
 			boardCtrl.fields.vote = null;
 			boardCtrl.fields.type = 0;
+//			boardCtrl.votoForm.value.$setPristine();
+//			boardCtrl.votoForm.value.$setUntouched();
+//			boardCtrl.votoForm.value.$error={};
 		};
 		
 		$scope.$on('updateBoard', function (event, data) {
@@ -126,6 +129,8 @@
 						    });
 				}
 			} else {
+				boardCtrl.fields.vote = null;
+				boardCtrl.fields.type = 0;
 				var sum = 0;
 				for (var i = 0; i < boardCtrl.usersBoard.length; i++) {
 					var factor = 1;

@@ -81,7 +81,12 @@ public class RoomSessionHandler {
 		message.add("board", board);
 		return message;
 	}
-
+	
+	public void resetRoom(Room room){
+		room.resetRoom();
+		sendToAllConnectedSessions(room, getRoomStatus(room));
+	}
+	
 	public void sendToAllConnectedSessions(Room room, JsonObject message) {
 		for ( Usuario user : room.getUsers()) {
 			MessageHandler.sendToSession(user.getSession(), message);
@@ -108,17 +113,17 @@ public class RoomSessionHandler {
 		sendToAllConnectedSessions(room, voteMessage);
 	}
 	
-	public void setConformity(Usuario usuario, boolean approved) {
-		Room room = usuario.getRoom();
-		usuario.setAceptado(approved);
-		
-		if (room.getUserAccpted() >= room.getUsers().size()) {
-			room.resetRoom();
-		}
-		
-		JsonObject voteMessage = getRoomStatus(room);
-		sendToAllConnectedSessions(room, voteMessage);
-	}
+//	public void setConformity(Usuario usuario, boolean approved) {
+//		Room room = usuario.getRoom();
+//		usuario.setAceptado(approved);
+//		
+//		if (room.getUserAccpted() >= room.getUsers().size()) {
+//			room.resetRoom();
+//		}
+//		
+//		JsonObject voteMessage = getRoomStatus(room);
+//		sendToAllConnectedSessions(room, voteMessage);
+//	}
 
 	protected void sendSessionIdToUser(Usuario user){
 		JsonObject message = new JsonObject();

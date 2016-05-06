@@ -82,19 +82,18 @@ public class Websocket {
 			user = sessionHandler.getUserBySession(session);
 			roomsHandler.registerVote(voto, tipoVoto, user);
 			break;
-		case EVAL_RESULTS:
-			System.out.println("Evaluar votación");
-			boolean approved = jsonMessage.get("approved").getAsBoolean();
-			user = sessionHandler.getUserBySession(session);
-			roomsHandler.setConformity(user, approved);
-			break;
 		case LOGOUT:
 			System.out.println("salir de la sala");
 			user = sessionHandler.getUserBySession(session);
 			sessionHandler.removeUserSession(session);
 			roomsHandler.removeUserToRoom(user);
 			sessionHandler.sendToAllConnectedSessionsWithoutUser(roomsHandler.getMessageListRooms(Command.ROOMS));
-			break;	
+			break;
+		case CLEAR_ROOM:
+			System.out.println("Volver a votar");
+			user = sessionHandler.getUserBySession(session);
+			roomsHandler.resetRoom(user.getRoom());
+			break;
 		default:
 			break;
 		}
