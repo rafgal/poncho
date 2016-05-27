@@ -4,8 +4,9 @@
 	
 	poncho.controller("ponchoController", function($scope, $mdDialog){
 		$scope.welcomeText='img/poncho.png';
-		
+		$("#ino").hide();
 		ws.onmessage = function(response) {
+			console.log(response.data);
 			var data =JSON.parse(response.data)
 			var commando = data.comando;
 			if(commando == 3) {
@@ -17,7 +18,10 @@
 				console.log("Se ha actualizado la sala");
 				$scope.changeToBoard(true);
 				$scope.$broadcast('updateBoard', data.board);
-			}else {
+			}else if (commando == 7) {
+				localStorage.setItem(PONCHO_SESSION_ID_KEY,
+						data.ponchoSessionId);
+			} else {
 				console.log("other command " + commando);
 			}
 		}

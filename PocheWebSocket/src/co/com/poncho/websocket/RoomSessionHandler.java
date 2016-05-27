@@ -39,6 +39,8 @@ public class RoomSessionHandler {
 		} 
 		room.addUser(user);
 		JsonObject addMessage = getRoomStatus(room);
+		System.out.println("add user to room pre send session id");
+		sendSessionIdToUser(user);
 		sendToAllConnectedSessions(room, addMessage);
 	}
 	
@@ -49,6 +51,8 @@ public class RoomSessionHandler {
 			room.removeUser(user);
 		}
 		sendToAllConnectedSessions(room, getRoomStatus(room));
+		if(room.getUsers().size() == 0)
+			rooms.remove(room.getName());
 	}
 	
 	public Set<String> getAllRooms() {
@@ -59,7 +63,7 @@ public class RoomSessionHandler {
 		return rooms.get(name);
 	}
 
-	private JsonObject getRoomStatus(Room room) {
+	public JsonObject getRoomStatus(Room room) {
 		JsonObject message = new JsonObject();
 		JsonObject board = new JsonObject();
 		message.addProperty("comando", Command.UPDATE_ROOM.getValue());
@@ -80,8 +84,13 @@ public class RoomSessionHandler {
 		message.add("board", board);
 		return message;
 	}
-
-	private void sendToAllConnectedSessions(Room room, JsonObject message) {
+	
+	public void resetRoom(Room room){
+		room.resetRoom();
+		sendToAllConnectedSessions(room, getRoomStatus(room));
+	}
+	
+	public void sendToAllConnectedSessions(Room room, JsonObject message) {
 		for ( Usuario user : room.getUsers()) {
 			MessageHandler.sendToSession(user.getSession(), message);
 		}
@@ -140,16 +149,22 @@ public class RoomSessionHandler {
         }
     }
 	
-	public void setConformity(Usuario usuario, boolean approved) {
-		Room room = usuario.getRoom();
-		usuario.setAceptado(approved);
-		
-		if (room.getUserAccpted() >= room.getUsers().size()) {
-			room.resetRoom();
-		}
-		
-		JsonObject voteMessage = getRoomStatus(room);
-		sendToAllConnectedSessions(room, voteMessage);
-	}
+//	public void setConformity(Usuario usuario, boolean approved) {
+//		Room room = usuario.getRoom();
+//		usuario.setAceptado(approved);
+//		
+//		if (room.getUserAccpted() >= room.getUsers().size()) {
+//			room.resetRoom();
+//		}
+//		
+//		JsonObject voteMessage = getRoomStatus(room);
+//		sendToAllConnectedSessions(room, voteMessage);
+//	}
 
+	protected void sendSessionIdToUser(Usuario user){
+		JsonObject message = new JsonObject();
+		message.addProperty("comando", Command.SEND_SESSION_ID.getValue());
+		message.addProperty("ponchoSessionId",	user.getSession().getId());
+		MessageHandler.sendToSession(user.getSession(), message);
+	}
 }
